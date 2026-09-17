@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABTIQON — Super Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  --primary:#7C3AED; --primary-dark:#6D28D9; --primary-light:#F3EEFF;
+  --navy:#0B1020; --bg:#F7F7FB; --card:#FFFFFF; --border:#E5E3F0;
+  --text:#0F172A; --muted:#64748B; --muted-2:#94A3B8;
+  --success:#10B981; --success-bg:#ECFDF5; --danger:#EF4444; --danger-bg:#FEF2F2;
+  --warning:#F59E0B; --warning-bg:#FFFBEB; --info:#0EA5E9; --info-bg:#F0F9FF;
+  --radius:12px; --radius-sm:8px;
+  --shadow:0 1px 2px rgba(15,23,42,.06), 0 1px 8px rgba(15,23,42,.05);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;font-size:14px;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:#D4D2E3;border-radius:8px;}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes modalPop{from{opacity:0;transform:scale(.96) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5);}70%{box-shadow:0 0 0 7px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+@keyframes pulseDotRed{0%{box-shadow:0 0 0 0 rgba(239,68,68,.5);}70%{box-shadow:0 0 0 7px rgba(239,68,68,0);}100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}}
+@keyframes shimmer{0%{background-position:-300px 0;}100%{background-position:300px 0;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes slidein{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+@keyframes barGrow{from{transform:scaleY(0);}to{transform:scaleY(1);}}
+.fade-in{animation:fadeInUp .35s ease both;}
+.stagger > *{animation:fadeInUp .4s ease both;}
+.stagger > *:nth-child(1){animation-delay:.02s;} .stagger > *:nth-child(2){animation-delay:.06s;}
+.stagger > *:nth-child(3){animation-delay:.10s;} .stagger > *:nth-child(4){animation-delay:.14s;}
+.stagger > *:nth-child(5){animation-delay:.18s;} .stagger > *:nth-child(6){animation-delay:.22s;}
+.stagger > *:nth-child(n+7){animation-delay:.26s;}
+
+#shell{display:flex;min-height:100vh;}
+#sidebar{width:252px;flex-shrink:0;background:linear-gradient(180deg,var(--navy),#151233 120%);color:#C9C6E0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s ease;}
+#sidebar.collapsed{width:72px;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:18px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.sb-brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary),#C4B5FD);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0;}
+.sb-brand .name{font-weight:800;font-size:15.5px;color:#fff;white-space:nowrap;overflow:hidden;}
+.sb-brand .name small{display:block;font-weight:600;font-size:10px;color:#A78BFA;letter-spacing:.06em;text-transform:uppercase;}
+#sidebar.collapsed .name{display:none;}
+.sb-toggle{margin-left:auto;background:rgba(255,255,255,.06);border:none;color:#A5A2C3;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-toggle:hover{background:rgba(255,255,255,.13);color:#fff;}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 10px 14px;}
+.sb-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#655F8A;padding:14px 12px 6px;font-weight:700;}
+#sidebar.collapsed .sb-group-label{display:none;}
+.sb-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;margin-bottom:2px;color:#C9C6E0;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;}
+.sb-item .ico{width:18px;flex-shrink:0;text-align:center;font-size:15px;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.sb-item.active{background:var(--primary);color:#fff;}
+.sb-item .badge{margin-left:auto;background:var(--danger);color:#fff;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:20px;}
+#sidebar.collapsed .sb-item .label,#sidebar.collapsed .sb-item .badge{display:none;}
+#sidebar.collapsed .sb-item{justify-content:center;}
+.sb-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#655F8A;}
+#sidebar.collapsed .sb-foot{display:none;}
+
+#main{flex:1;min-width:0;display:flex;flex-direction:column;}
+#topbar{height:62px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;position:sticky;top:0;z-index:20;}
+.tb-tag{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#fff;background:linear-gradient(135deg,var(--primary),#A78BFA);padding:5px 11px;border-radius:20px;}
+.tb-spacer{flex:1;}
+.sys-status{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);background:#F8FAFC;border:1px solid var(--border);padding:6px 12px;border-radius:20px;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulseDot 2s infinite;}
+.status-dot.down{background:var(--danger);animation:pulseDotRed 2s infinite;}
+.tb-bell{position:relative;width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.tb-bell .dot{position:absolute;top:6px;right:7px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:2px solid #fff;}
+.tb-profile{display:flex;align-items:center;gap:9px;padding:5px 8px 5px 5px;border-radius:9px;}
+.tb-profile:hover{background:#F1F5F9;}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#A78BFA);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.tb-profile .who{line-height:1.25;} .tb-profile .who .n{font-weight:700;font-size:13px;} .tb-profile .who .r{font-size:11px;color:var(--muted);}
+
+#app{flex:1;padding:24px 28px 60px;max-width:1360px;width:100%;margin:0 auto;}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.page-head h1{font-size:22px;font-weight:800;margin:0 0 4px;letter-spacing:-.01em;}
+.page-head .sub{color:var(--muted);font-size:13.5px;}
+.crumb{font-size:12.5px;color:var(--primary);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-bottom:8px;}
+.crumb:hover{text-decoration:underline;}
+
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:#fff;color:var(--text);padding:9px 15px;border-radius:9px;font-size:13.5px;font-weight:600;white-space:nowrap;transition:transform .12s ease,box-shadow .12s ease,background .12s ease;}
+.btn:hover{background:#F8FAFC;transform:translateY(-1px);}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);box-shadow:0 6px 16px rgba(124,58,237,.28);}
+.btn-danger{background:#fff;border-color:#FCA5A5;color:var(--danger);}
+.btn-danger:hover{background:var(--danger-bg);}
+.btn-danger-solid{background:var(--danger);border-color:var(--danger);color:#fff;}
+.btn-success-solid{background:var(--success);border-color:var(--success);color:#fff;}
+.btn-sm{padding:6px 11px;font-size:12.5px;border-radius:7px;}
+.btn-ghost{border-color:transparent;background:transparent;}
+.btn-ghost:hover{background:#F1F5F9;transform:none;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-block{width:100%;justify-content:center;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transition:box-shadow .15s ease,transform .15s ease;}
+.card-hover:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(76,29,149,.10);}
+.card-pad{padding:20px;}
+.grid{display:grid;gap:16px;}
+.grid-2{grid-template-columns:1fr 1fr;} .grid-3{grid-template-columns:1fr 1fr 1fr;} .grid-4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:980px){.grid-4{grid-template-columns:repeat(2,1fr);}.grid-3{grid-template-columns:1fr 1fr;}.grid-2{grid-template-columns:1fr;}}
+
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.stat-card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.stat-card .ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.stat-card .val{font-size:26px;font-weight:800;letter-spacing:-.02em;}
+.stat-card .lbl{color:var(--muted);font-size:12.5px;margin-top:2px;}
+.stat-card .delta{font-size:11.5px;font-weight:700;margin-top:8px;display:inline-block;padding:2px 8px;border-radius:20px;}
+.delta-up{color:var(--success);background:var(--success-bg);} .delta-warn{color:var(--warning);background:var(--warning-bg);} .delta-info{color:var(--info);background:var(--info-bg);} .delta-down{color:var(--danger);background:var(--danger-bg);}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.badge-green{background:var(--success-bg);color:#047857;} .badge-red{background:var(--danger-bg);color:#B91C1C;} .badge-amber{background:var(--warning-bg);color:#B45309;} .badge-blue{background:var(--info-bg);color:#0369A1;} .badge-gray{background:#F1F5F9;color:#475569;} .badge-purple{background:var(--primary-light);color:var(--primary-dark);}
+.dot-ind{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--success);display:inline-block;animation:pulseDot 2s infinite;}
+.maint-dot{width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block;}
+.susp-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);display:inline-block;animation:pulseDotRed 2s infinite;}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;padding:10px 14px;border-bottom:1px solid var(--border);background:#FAFAFD;white-space:nowrap;}
+td{padding:11px 14px;border-bottom:1px solid #F2F1F8;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FBFAFF;}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:#fff;box-shadow:var(--shadow);}
+.table-wrap table{box-shadow:none;border:none;}
+.row-click{cursor:pointer;}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.search-input{position:relative;flex:1;min-width:220px;max-width:340px;}
+.search-input input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:9px;background:#fff;}
+.search-input span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted-2);}
+.sel{padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);min-width:120px;}
+
+.form-row{margin-bottom:14px;}
+.form-row label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;color:#334155;}
+.form-row input[type=text],.form-row input[type=number],.form-row input[type=date],.form-row input[type=email],.form-row input[type=tel],.form-row input[type=password],.form-row select,.form-row textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);}
+.form-row textarea{resize:vertical;min-height:70px;}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;}
+.form-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--primary-dark);margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);}
+.form-section-title:first-child{margin-top:0;padding-top:0;border-top:none;}
+.check-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;}
+.hint{font-size:12px;color:var(--muted-2);margin-top:4px;}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px;overflow-x:auto;}
+.tab{padding:10px 15px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+.tab:hover{color:var(--primary-dark);}
+
+.school-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+.school-card .ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;}
+.school-logo{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px;flex-shrink:0;}
+.school-card h3{margin:0;font-size:15.5px;font-weight:800;}
+.school-card .city{color:var(--muted);font-size:12px;}
+.plan-pill{border-radius:8px;padding:10px 12px;margin:12px 0;background:#FAFAFD;border:1px solid var(--border);}
+.plan-pill .row1{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:6px;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty-state .ico{font-size:34px;margin-bottom:10px;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(11,16,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modalPop .18s ease both;}
+.modal.modal-lg{max-width:820px;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:2;}
+.modal-head h3{margin:0;font-size:16px;font-weight:800;}
+.modal-close{width:30px;height:30px;border-radius:8px;border:none;background:#F1F5F9;font-size:15px;color:var(--muted);}
+.modal-body{padding:20px 22px;}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:#fff;}
+.step-dots{display:flex;gap:6px;margin-bottom:4px;}
+.step-dots span{width:26px;height:4px;border-radius:4px;background:#E5E3F0;}
+.step-dots span.active{background:var(--primary);}
+
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:10px;}
+.toast{background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:13.5px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;align-items:center;gap:9px;animation:slidein .2s ease;}
+.toast.ok{background:#065F46;} .toast.warn{background:#92400E;}
+
+.mini-bar{display:flex;align-items:flex-end;gap:7px;height:110px;}
+.mini-bar .bar{flex:1;background:linear-gradient(180deg,var(--primary),#C4B5FD);border-radius:5px 5px 0 0;position:relative;min-height:3px;transform-origin:bottom;animation:barGrow .5s ease both;}
+.mini-bar .bar span{position:absolute;bottom:-19px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);}
+.mini-bar-wrap{padding-bottom:20px;}
+
+.progress{height:8px;background:#F1F5F9;border-radius:20px;overflow:hidden;}
+.progress > div{height:100%;background:var(--primary);border-radius:20px;transition:width .6s cubic-bezier(.22,1,.36,1);}
+.progress.danger > div{background:var(--danger);}
+.progress.warn > div{background:var(--warning);}
+
+.donut{width:140px;height:140px;border-radius:50%;position:relative;}
+.donut-hole{position:absolute;inset:16px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+
+.list-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F2F1F8;}
+.list-row:last-child{border-bottom:none;}
+.list-row .ico2{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+
+.shimmer{background:linear-gradient(90deg,#F1F0FA 25%,#E7E5F5 37%,#F1F0FA 63%);background-size:400px 100%;animation:shimmer 1.4s ease infinite;}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+.spinner-dark{border:2px solid #E5E3F0;border-top-color:var(--primary);}
+
+.cred-box{background:#F8FAFC;border:1px dashed var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cred-box .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:13.5px;}
+.copy-btn{border:none;background:var(--primary-light);color:var(--primary-dark);padding:5px 10px;border-radius:7px;font-size:11.5px;font-weight:700;}
+.copy-btn:hover{background:#E4D9FF;}
+
+.toggle{position:relative;width:42px;height:23px;border-radius:20px;background:#E2E1F0;flex-shrink:0;transition:background .18s ease;}
+.toggle.on{background:var(--success);}
+.toggle .knob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .18s ease;}
+.toggle.on .knob{left:21px;}
+
+
+#loading-screen{position:fixed;inset:0;background:linear-gradient(160deg,#0B1020,#1A1440);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .3s ease;}
+#loading-screen .mark-lg{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--primary),#C4B5FD);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:24px;margin-bottom:18px;animation:pulseDot 1.8s infinite;}
+#loading-screen .ll-title{color:#fff;font-weight:800;font-size:18px;margin-bottom:6px;}
+#loading-screen .ll-sub{color:#A5A2C3;font-size:12.5px;margin-bottom:20px;}
+#loading-screen .ll-spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);border-top-color:#C4B5FD;border-radius:50%;animation:spin .8s linear infinite;}
+@media(max-width:900px){
+  #sidebar{position:fixed;left:-260px;height:100vh;z-index:50;}
+  #sidebar.mobile-open{left:0;}
+  #app{padding:16px;}
+  .form-2col{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="loading-screen"><div class="mark-lg">AQ</div><div class="ll-title">ABTIQON Control Plane</div><div class="ll-sub" id="loading-status">Connecting to API…</div><div class="ll-spinner"></div></div>
+<div id="shell">
+  <aside id="sidebar">
+    <div class="sb-brand">
+      <div class="mark">AQ</div>
+      <div class="name">ABTIQON<small>Super Admin</small></div>
+      <button class="sb-toggle" data-action="toggle-sidebar">‹</button>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-foot">Control Plane v1.0 · Demo Data</div>
+  </aside>
+  <div id="main">
+    <header id="topbar"></header>
+    <main id="app"></main>
+  </div>
+</div>
+<div id="modal-root"></div>
+<div class="toast-wrap" id="toast-wrap"></div>
+<script type="application/json" id="embedded-data">
+{
+  "status": "success",
+  "meta": {
+    "apiVersion": "1.0",
+    "generatedAt": "2026-09-17T04:54:35.081Z",
+    "today": "2026-09-14",
+    "source": "ABTIQON Control Plane API (simulated)"
+  },
+  "data": {
+    "plans": [
+      {
+        "id": "basic",
+        "name": "Basic",
+        "price": 5000,
+        "cycle": "month",
+        "maxStudents": 150,
+        "color": "#0EA5E9",
+        "features": [
+          "1 Campus",
+          "Student & Fee Management",
+          "Email Support"
+        ]
+      },
+      {
+        "id": "standard",
+        "name": "Standard",
+        "price": 12000,
+        "cycle": "month",
+        "maxStudents": 500,
+        "color": "#7C3AED",
+        "features": [
+          "Up to 3 Campuses",
+          "Attendance & Exams",
+          "WhatsApp Integration",
+          "Priority Support"
+        ]
+      },
+      {
+        "id": "premium",
+        "name": "Premium",
+        "price": 25000,
+        "cycle": "month",
+        "maxStudents": 2000,
+        "color": "#F59E0B",
+        "features": [
+          "Unlimited Campuses",
+          "Custom Branding",
+          "API Access",
+          "Dedicated Support"
+        ]
+      }
+    ],
+    "schools": [
+      {
+        "id": "sch_greenfield0",
+        "name": "Greenfield Academy",
+        "city": "Islamabad",
+        "address": "Sector DHA, Islamabad",
+        "phone": "051-9421962",
+        "email": "info@greenfield.edu.pk",
+        "adminName": "Rabia Sheikh",
+        "adminEmail": "rabiasheik.admin@greenfield.edu.pk",
+        "adminPassword": "dCaDN725!",
+        "plan": "premium",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-02-19",
+        "subscriptionStart": "2026-02-19",
+        "subscriptionEnd": "2026-10-08",
+        "students": 606,
+        "teachers": 28,
+        "storageUsedGB": 5.1,
+        "lastBackup": "2026-09-16T04:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_g9qddf2",
+            "invoiceNo": "INV-3000",
+            "date": "2026-02-19",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_3tz70ku",
+            "invoiceNo": "INV-3001",
+            "date": "2026-03-21",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_rr9m6xr",
+            "invoiceNo": "INV-3002",
+            "date": "2026-04-20",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_sp546qu",
+            "invoiceNo": "INV-3003",
+            "date": "2026-05-20",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_djhyo8l",
+            "invoiceNo": "INV-3004",
+            "date": "2026-06-19",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      },
+      {
+        "id": "sch_alnoorscho1",
+        "name": "Al-Noor School System",
+        "city": "Lahore",
+        "address": "Sector G-9, Lahore",
+        "phone": "051-2034673",
+        "email": "info@alnoorscho.edu.pk",
+        "adminName": "Imran Javed",
+        "adminEmail": "imranjaved.admin@alnoorscho.edu.pk",
+        "adminPassword": "dUbYn768@",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-07-07",
+        "subscriptionStart": "2026-07-07",
+        "subscriptionEnd": "2026-09-18",
+        "students": 715,
+        "teachers": 33,
+        "storageUsedGB": 1.1,
+        "lastBackup": "2026-09-15T18:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#0EA5E9",
+        "billingHistory": [
+          {
+            "id": "inv_da59wqs",
+            "invoiceNo": "INV-3010",
+            "date": "2026-07-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_cn0sllc",
+            "invoiceNo": "INV-3011",
+            "date": "2026-08-06",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_8m9yziq",
+            "invoiceNo": "INV-3012",
+            "date": "2026-09-05",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_uxnieoi",
+            "invoiceNo": "INV-3013",
+            "date": "2026-10-05",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_el939zu",
+            "invoiceNo": "INV-3014",
+            "date": "2026-11-04",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_citygramma2",
+        "name": "City Grammar School",
+        "city": "Karachi",
+        "address": "Sector Model Town, Karachi",
+        "phone": "051-7019870",
+        "email": "info@citygramma.edu.pk",
+        "adminName": "Ahmed Sheikh",
+        "adminEmail": "ahmedsheik.admin@citygramma.edu.pk",
+        "adminPassword": "Ppsru989@",
+        "plan": "standard",
+        "status": "Trial",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-26",
+        "subscriptionStart": "2026-03-26",
+        "subscriptionEnd": "2026-09-23",
+        "students": 345,
+        "teachers": 16,
+        "storageUsedGB": 3.2,
+        "lastBackup": "2026-09-14T19:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#6366F1",
+        "billingHistory": [
+          {
+            "id": "inv_91zqwru",
+            "invoiceNo": "INV-3020",
+            "date": "2026-03-26",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_qk4q4iw",
+            "invoiceNo": "INV-3021",
+            "date": "2026-04-25",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_1ex583k",
+            "invoiceNo": "INV-3022",
+            "date": "2026-05-25",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_xlbydtl",
+            "invoiceNo": "INV-3023",
+            "date": "2026-06-24",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_brightfutu3",
+        "name": "Bright Future Academy",
+        "city": "Rawalpindi",
+        "address": "Sector DHA, Rawalpindi",
+        "phone": "051-2605273",
+        "email": "info@brightfutu.edu.pk",
+        "adminName": "Bilal Malik",
+        "adminEmail": "bilalmalik.admin@brightfutu.edu.pk",
+        "adminPassword": "eVcfG238$",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-05-02",
+        "subscriptionStart": "2026-05-02",
+        "subscriptionEnd": "2026-10-01",
+        "students": 828,
+        "teachers": 38,
+        "storageUsedGB": 2.8,
+        "lastBackup": "2026-09-16T15:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_a03t3rv",
+            "invoiceNo": "INV-3030",
+            "date": "2026-05-02",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_zh0ois0",
+            "invoiceNo": "INV-3031",
+            "date": "2026-06-01",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_puee79h",
+            "invoiceNo": "INV-3032",
+            "date": "2026-07-01",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_m4t4vx7",
+            "invoiceNo": "INV-3033",
+            "date": "2026-07-31",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      },
+      {
+        "id": "sch_thelearnin4",
+        "name": "The Learning Tree School",
+        "city": "Multan",
+        "address": "Sector G-9, Multan",
+        "phone": "051-4854662",
+        "email": "info@thelearnin.edu.pk",
+        "adminName": "Nida Iqbal",
+        "adminEmail": "nidaiqbal.admin@thelearnin.edu.pk",
+        "adminPassword": "qHWKq387#",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-04-12",
+        "subscriptionStart": "2026-04-12",
+        "subscriptionEnd": "2026-09-20",
+        "students": 187,
+        "teachers": 9,
+        "storageUsedGB": 1.7,
+        "lastBackup": "2026-09-16T07:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_5b7wx8v",
+            "invoiceNo": "INV-3040",
+            "date": "2026-04-12",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_egc7ro0",
+            "invoiceNo": "INV-3041",
+            "date": "2026-05-12",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_sh99yel",
+            "invoiceNo": "INV-3042",
+            "date": "2026-06-11",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_iqramodels5",
+        "name": "Iqra Model School",
+        "city": "Faisalabad",
+        "address": "Sector Model Town, Faisalabad",
+        "phone": "051-5415568",
+        "email": "info@iqramodels.edu.pk",
+        "adminName": "Ayesha Farooq",
+        "adminEmail": "ayeshafaro.admin@iqramodels.edu.pk",
+        "adminPassword": "mxygb678@",
+        "plan": "premium",
+        "status": "Trial",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-25",
+        "subscriptionStart": "2026-03-25",
+        "subscriptionEnd": "2026-09-17",
+        "students": 317,
+        "teachers": 14,
+        "storageUsedGB": 0.6,
+        "lastBackup": "2026-09-15T19:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EF4444",
+        "billingHistory": [
+          {
+            "id": "inv_4n27b36",
+            "invoiceNo": "INV-3050",
+            "date": "2026-03-25",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_4m06m23",
+            "invoiceNo": "INV-3051",
+            "date": "2026-04-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_dt4ucoi",
+            "invoiceNo": "INV-3052",
+            "date": "2026-05-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_falconhous6",
+        "name": "Falcon House School",
+        "city": "Peshawar",
+        "address": "Sector G-9, Peshawar",
+        "phone": "051-8777910",
+        "email": "info@falconhous.edu.pk",
+        "adminName": "Ahmed Abbasi",
+        "adminEmail": "ahmedabbas.admin@falconhous.edu.pk",
+        "adminPassword": "jUwSf775@",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-05-02",
+        "subscriptionStart": "2026-05-02",
+        "subscriptionEnd": "2026-09-30",
+        "students": 125,
+        "teachers": 6,
+        "storageUsedGB": 0.9,
+        "lastBackup": "2026-09-16T11:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_ajev7do",
+            "invoiceNo": "INV-3060",
+            "date": "2026-05-02",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_dpsnupp",
+            "invoiceNo": "INV-3061",
+            "date": "2026-06-01",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_ngwuxyx",
+            "invoiceNo": "INV-3062",
+            "date": "2026-07-01",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_acf3ori",
+            "invoiceNo": "INV-3063",
+            "date": "2026-07-31",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_horizonint7",
+        "name": "Horizon International School",
+        "city": "Quetta",
+        "address": "Sector Model Town, Quetta",
+        "phone": "051-5382904",
+        "email": "info@horizonint.edu.pk",
+        "adminName": "Ayesha Qureshi",
+        "adminEmail": "ayeshaqure.admin@horizonint.edu.pk",
+        "adminPassword": "nkhjk472@",
+        "plan": "basic",
+        "status": "Expired",
+        "websiteStatus": "Suspended",
+        "createdDate": "2026-02-16",
+        "subscriptionStart": "2026-02-16",
+        "subscriptionEnd": "2026-08-31",
+        "students": 173,
+        "teachers": 8,
+        "storageUsedGB": 0.7,
+        "lastBackup": "2026-09-15T07:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_y0mwwr5",
+            "invoiceNo": "INV-3070",
+            "date": "2026-02-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_9wtwl63",
+            "invoiceNo": "INV-3071",
+            "date": "2026-03-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_e634z2b",
+            "invoiceNo": "INV-3072",
+            "date": "2026-04-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_alhudaacad8",
+        "name": "Al-Huda Academy",
+        "city": "Sialkot",
+        "address": "Sector DHA, Sialkot",
+        "phone": "051-6025481",
+        "email": "info@alhudaacad.edu.pk",
+        "adminName": "Kashif Sheikh",
+        "adminEmail": "kashifshei.admin@alhudaacad.edu.pk",
+        "adminPassword": "MWsbb588@",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-02-16",
+        "subscriptionStart": "2026-02-16",
+        "subscriptionEnd": "2026-09-28",
+        "students": 846,
+        "teachers": 38,
+        "storageUsedGB": 2.1,
+        "lastBackup": "2026-09-16T08:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_38qz3in",
+            "invoiceNo": "INV-3080",
+            "date": "2026-02-16",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_ljlgp06",
+            "invoiceNo": "INV-3081",
+            "date": "2026-03-18",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_fssqml3",
+            "invoiceNo": "INV-3082",
+            "date": "2026-04-17",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_dhlxdd1",
+            "invoiceNo": "INV-3083",
+            "date": "2026-05-17",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_crescentpu9",
+        "name": "Crescent Public School",
+        "city": "Gujranwala",
+        "address": "Sector I-8, Gujranwala",
+        "phone": "051-4782932",
+        "email": "info@crescentpu.edu.pk",
+        "adminName": "Kashif Baig",
+        "adminEmail": "kashifbaig.admin@crescentpu.edu.pk",
+        "adminPassword": "ymgTG445!",
+        "plan": "basic",
+        "status": "Suspended",
+        "websiteStatus": "Suspended",
+        "createdDate": "2026-03-19",
+        "subscriptionStart": "2026-03-19",
+        "subscriptionEnd": "2026-08-05",
+        "students": 321,
+        "teachers": 15,
+        "storageUsedGB": 4,
+        "lastBackup": "2026-09-15T11:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_u9jj0c0",
+            "invoiceNo": "INV-3090",
+            "date": "2026-03-19",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_7qi48uu",
+            "invoiceNo": "INV-3091",
+            "date": "2026-04-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_6wm3dae",
+            "invoiceNo": "INV-3092",
+            "date": "2026-05-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_xnv1e8x",
+            "invoiceNo": "INV-3093",
+            "date": "2026-06-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_0exfslb",
+            "invoiceNo": "INV-3094",
+            "date": "2026-07-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_eliteschol10",
+        "name": "Elite Scholars School",
+        "city": "Hyderabad",
+        "address": "Sector G-9, Hyderabad",
+        "phone": "051-9009870",
+        "email": "info@eliteschol.edu.pk",
+        "adminName": "Sana Iqbal",
+        "adminEmail": "sanaiqbal.admin@eliteschol.edu.pk",
+        "adminPassword": "WwCKa928@",
+        "plan": "premium",
+        "status": "Expired",
+        "websiteStatus": "Maintenance",
+        "createdDate": "2026-03-25",
+        "subscriptionStart": "2026-03-25",
+        "subscriptionEnd": "2026-09-11",
+        "students": 507,
+        "teachers": 23,
+        "storageUsedGB": 3.1,
+        "lastBackup": "2026-09-14T04:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#6366F1",
+        "billingHistory": [
+          {
+            "id": "inv_6smick8",
+            "invoiceNo": "INV-3100",
+            "date": "2026-03-25",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_bad89xx",
+            "invoiceNo": "INV-3101",
+            "date": "2026-04-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_rpv9qpf",
+            "invoiceNo": "INV-3102",
+            "date": "2026-05-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_gg5hqqc",
+            "invoiceNo": "INV-3103",
+            "date": "2026-06-23",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_bvfgrjt",
+            "invoiceNo": "INV-3104",
+            "date": "2026-07-23",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_nishatacad11",
+        "name": "Nishat Academy",
+        "city": "Bahawalpur",
+        "address": "Sector F-10, Bahawalpur",
+        "phone": "051-3193684",
+        "email": "info@nishatacad.edu.pk",
+        "adminName": "Imran Malik",
+        "adminEmail": "imranmalik.admin@nishatacad.edu.pk",
+        "adminPassword": "fSAcY452@",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-17",
+        "subscriptionStart": "2026-03-17",
+        "subscriptionEnd": "2026-10-12",
+        "students": 611,
+        "teachers": 28,
+        "storageUsedGB": 0.6,
+        "lastBackup": null,
+        "lastBackupStatus": "Never",
+        "color": "#14B8A6",
+        "billingHistory": [
+          {
+            "id": "inv_zh22omd",
+            "invoiceNo": "INV-3110",
+            "date": "2026-03-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_6drgr6n",
+            "invoiceNo": "INV-3111",
+            "date": "2026-04-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_jfqdout",
+            "invoiceNo": "INV-3112",
+            "date": "2026-05-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_h1bmoog",
+            "invoiceNo": "INV-3113",
+            "date": "2026-06-15",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_457phvt",
+            "invoiceNo": "INV-3114",
+            "date": "2026-07-15",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_sunrisepub12",
+        "name": "Sunrise Public School",
+        "city": "Abbottabad",
+        "address": "Sector F-10, Abbottabad",
+        "phone": "051-8991390",
+        "email": "info@sunrisepub.edu.pk",
+        "adminName": "Sana Javed",
+        "adminEmail": "sanajaved.admin@sunrisepub.edu.pk",
+        "adminPassword": "YVYHK443#",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-08",
+        "subscriptionStart": "2026-03-08",
+        "subscriptionEnd": "2026-10-11",
+        "students": 718,
+        "teachers": 33,
+        "storageUsedGB": 1.8,
+        "lastBackup": "2026-09-16T08:54:35.081Z",
+        "lastBackupStatus": "Failed",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_5lj2muh",
+            "invoiceNo": "INV-3120",
+            "date": "2026-03-08",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_s6vs9tn",
+            "invoiceNo": "INV-3121",
+            "date": "2026-04-07",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_qq4w1mh",
+            "invoiceNo": "INV-3122",
+            "date": "2026-05-07",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_thescholar13",
+        "name": "The Scholars Inn",
+        "city": "Sargodha",
+        "address": "Sector Model Town, Sargodha",
+        "phone": "051-1037048",
+        "email": "info@thescholar.edu.pk",
+        "adminName": "Bilal Khan",
+        "adminEmail": "bilalkhan.admin@thescholar.edu.pk",
+        "adminPassword": "xrRRK253%",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-06-07",
+        "subscriptionStart": "2026-06-07",
+        "subscriptionEnd": "2026-10-07",
+        "students": 145,
+        "teachers": 7,
+        "storageUsedGB": 9,
+        "lastBackup": "2026-09-14T16:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_syv9qje",
+            "invoiceNo": "INV-3130",
+            "date": "2026-06-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_w4cnsgj",
+            "invoiceNo": "INV-3131",
+            "date": "2026-07-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      }
+    ]
+  }
+}
+</script>
+
+<script>
+/* ============================== DATA ============================== */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const rng=mulberry32(77776666);
+function pick(arr){return arr[Math.floor(rng()*arr.length)];}
+function randInt(mn,mx){return Math.floor(rng()*(mx-mn+1))+mn;}
+function uid(p){return p+'_'+Math.random().toString(36).slice(2,9);}
+function pad(n,l){return String(n).padStart(l,'0');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function initials(name){return name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();}
+function ic(name,size){size=size||16;return '<i data-lucide="'+name+'" style="width:'+size+'px;height:'+size+'px;vertical-align:-'+Math.round(size*0.18)+'px;"></i>';}
+function renderIcons(){if(window.lucide&&lucide.createIcons)lucide.createIcons();}
+function fmtMoney(n){return 'Rs. '+Math.round(n).toLocaleString('en-PK');}
+function fmtDate(s){if(!s)return'—';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateTime(s){const d=new Date(s);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function addDays(dateStr,days){const d=new Date(dateStr+'T00:00:00');d.setDate(d.getDate()+days);return d.toISOString().slice(0,10);}
+function daysBetween(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
+function todayStr(){return APP_TODAY_STR;}
+const APP_TODAY_STR='2026-09-14';
+function genPassword(){
+  const letters='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz';
+  const digits='23456789'; const symbols='!@#$%';
+  let p='';
+  for(let i=0;i<5;i++)p+=letters[randInt(0,letters.length-1)];
+  for(let i=0;i<3;i++)p+=digits[randInt(0,digits.length-1)];
+  p+=symbols[randInt(0,symbols.length-1)];
+  return p;
+}
+function slug(name){return name.toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,10);}
+function schoolColor(seedStr){
+  const palette=['#7C3AED','#0EA5E9','#10B981','#F59E0B','#EF4444','#EC4899','#6366F1','#14B8A6'];
+  let h=0;for(let i=0;i<seedStr.length;i++)h=(h*31+seedStr.charCodeAt(i))|0;
+  return palette[Math.abs(h)%palette.length];
+}
+
+let PLANS=[];
+let SCHOOLS=[];
+function plan(id){return PLANS.find(p=>p.id===id);}
+function setLoadingStatus(msg){const el=document.getElementById('loading-status'); if(el) el.textContent=msg;}
+function hideLoadingScreen(){
+  const el=document.getElementById('loading-screen');
+  if(!el) return;
+  el.style.opacity='0';
+  setTimeout(()=>el.remove(),300);
+}
+async function loadData(){
+  setLoadingStatus('Connecting to ABTIQON API\u2026');
+  const minWait=new Promise(r=>setTimeout(r,650));
+  let payload=null;
+  try{
+    const res=await fetch('./schools-data.json',{cache:'no-store'});
+    if(!res.ok) throw new Error('Network response was not ok');
+    payload=await res.json();
+    setLoadingStatus('Fetched schools-data.json \u2713');
+  }catch(err){
+    setLoadingStatus('API unreachable \u2014 loading cached snapshot\u2026');
+    const embedded=document.getElementById('embedded-data');
+    if(embedded){ try{ payload=JSON.parse(embedded.textContent); }catch(e2){ payload=null; } }
+  }
+  await minWait;
+  if(payload && payload.data){
+    PLANS=payload.data.plans;
+    SCHOOLS=payload.data.schools;
+  }
+  hideLoadingScreen();
+  route();
+}
+function schoolById(id){return SCHOOLS.find(s=>s.id===id);}
+function daysRemaining(s){return daysBetween(APP_TODAY_STR,s.subscriptionEnd);}
+function computeLiveStatus(s){
+  const dr=daysRemaining(s);
+  if(s.status==='Suspended') return 'Suspended';
+  if(dr<0) return 'Expired';
+  if(dr<=7) return 'Expiring Soon';
+  if(s.status==='Trial') return 'Trial';
+  return 'Active';
+}
+function allInvoices(){
+  let list=[];
+  SCHOOLS.forEach(s=>s.billingHistory.forEach(inv=>list.push({...inv,schoolId:s.id,schoolName:s.name})));
+  return list.sort((a,b)=>b.date.localeCompare(a.date));
+}
+
+/* ============================== STATE ============================== */
+const STATE={
+  sidebarCollapsed:false,
+  filters:{schools:{q:'',status:'',plan:''},invoices:{status:'All'},},
+  extendSchoolId:null,
+};
+
+/* ============================== HELPERS ============================== */
+function toast(msg,type='ok'){
+  const wrap=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='toast '+(type==='ok'?'ok':type==='warn'?'warn':'');
+  t.innerHTML=(type==='ok'?ic('check',14):type==='warn'?ic('alert-triangle',14):ic('info',14))+' '+msg;
+  wrap.appendChild(t);
+  renderIcons();
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2800);
+}
+function openModal(html,size=''){document.getElementById('modal-root').innerHTML=`<div class="modal-overlay" data-action="close-modal-bg"><div class="modal ${size}">${html}</div></div>`;renderIcons();}
+function closeModal(){document.getElementById('modal-root').innerHTML='';}
+function infoRow(l,v){return `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F2F1F8;font-size:13px;"><span style="color:var(--muted);">${l}</span><b>${v}</b></div>`;}
+function statusBadge(live){
+  const map={'Active':['badge-green','●'],'Trial':['badge-blue','◐'],'Expiring Soon':['badge-amber','●'],'Expired':['badge-red','●'],'Suspended':['badge-red','●']};
+  const [cls,dot]=map[live]||['badge-gray','●'];
+  return `<span class="badge ${cls}">${dot} ${live}</span>`;
+}
+function wsStatusDot(ws){
+  if(ws==='Live') return `<span class="live-dot"></span> Live`;
+  if(ws==='Maintenance') return `<span class="maint-dot"></span> Maintenance`;
+  return `<span class="susp-dot"></span> Suspended`;
+}
+function animateValue(el,end,isMoney){
+  if(!el) return;
+  let start=0; const duration=700; const startTime=performance.now();
+  function tick(now){
+    const p=Math.min(1,(now-startTime)/duration);
+    const eased=1-Math.pow(1-p,3);
+    const val=Math.round(start+(end-start)*eased);
+    el.textContent = isMoney? fmtMoney(val) : val.toLocaleString('en-PK');
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+function go(route){location.hash=route;}
+
+/* ============================== SIDEBAR / TOPBAR ============================== */
+const NAV=[
+ {group:'General',items:[{route:'#/dashboard',ico:ic('layout-dashboard'),label:'Dashboard'}]},
+ {group:'Tenants',items:[
+   {route:'#/schools',ico:ic('school'),label:'Schools'},
+   {route:'#/website-status',ico:ic('globe'),label:'Website Status'},
+ ]},
+ {group:'Revenue',items:[
+   {route:'#/billing',ico:ic('credit-card'),label:'Billing & Fees'},
+   {route:'#/backup',ico:ic('database'),label:'Backups'},
+ ]},
+ {group:'System',items:[{route:'#/settings',ico:ic('settings'),label:'Settings'}]},
+];
+function expiringSoonCount(){return SCHOOLS.filter(s=>{const d=daysRemaining(s);return d>=0&&d<=7&&s.status!=='Suspended';}).length;}
+function renderSidebar(){
+  const cur=location.hash||'#/dashboard';
+  let html='';
+  NAV.forEach(g=>{
+    html+=`<div class="sb-group-label">${g.group}</div>`;
+    g.items.forEach(it=>{
+      const active=cur.split('/').slice(0,2).join('/')===it.route.split('/').slice(0,2).join('/');
+      const badge = it.route==='#/schools' ? expiringSoonCount() : 0;
+      html+=`<a class="sb-item ${active?'active':''}" data-action="nav" data-route="${it.route}"><span class="ico">${it.ico}</span><span class="label">${it.label}</span>${badge?`<span class="badge">${badge}</span>`:''}</a>`;
+    });
+  });
+  document.getElementById('sb-nav').innerHTML=html;
+  document.getElementById('sidebar').classList.toggle('collapsed',STATE.sidebarCollapsed);
+}
+function renderTopbar(){
+  const overdueCount=allInvoices().filter(i=>i.status==='Overdue').length;
+  document.getElementById('topbar').innerHTML=`
+    <span class="tb-tag">SUPER ADMIN</span>
+    <div class="sys-status"><span class="status-dot"></span> All Systems Operational</div>
+    <div class="tb-spacer"></div>
+    <button class="tb-bell" data-action="nav" data-route="#/billing/invoices">${ic('bell',18)}<span class="dot"></span></button>
+    <div class="tb-profile" data-action="nav" data-route="#/settings">
+      <div class="avatar">AQ</div>
+      <div class="who"><div class="n">Abbas</div><div class="r">Platform Owner</div></div>
+    </div>`;
+}
+
+/* ============================== ROUTER ============================== */
+function route(){
+  const hash=location.hash||'#/dashboard';
+  const parts=hash.replace('#/','').split('/');
+  renderSidebar(); renderTopbar();
+  const app=document.getElementById('app');
+  try{
+    if(parts[0]==='dashboard') app.innerHTML=pageDashboard();
+    else if(parts[0]==='schools'&&!parts[1]) app.innerHTML=pageSchools();
+    else if(parts[0]==='school'&&parts[1]) app.innerHTML=pageSchoolDetail(parts[1],parts[2]||'overview');
+    else if(parts[0]==='website-status') app.innerHTML=pageWebsiteStatus();
+    else if(parts[0]==='billing'&&!parts[1]) app.innerHTML=pageBilling('plans');
+    else if(parts[0]==='billing'&&parts[1]) app.innerHTML=pageBilling(parts[1]);
+    else if(parts[0]==='backup') app.innerHTML=pageBackup();
+    else if(parts[0]==='settings') app.innerHTML=pageSettings(parts[1]||'profile');
+    else app.innerHTML=pageDashboard();
+  }catch(err){
+    console.error(err);
+    app.innerHTML=`<div class="empty-state"><div class="ico">${ic('alert-triangle',30)}</div><h3>Something went wrong</h3><p>${esc(err.message)}</p></div>`;
+  }
+  window.scrollTo(0,0);
+  renderIcons();
+  requestAnimationFrame(()=>document.querySelectorAll('[data-countup]').forEach(el=>animateValue(el,Number(el.dataset.countup),el.dataset.money==='1')));
+}
+window.addEventListener('hashchange',route);
+
+/* ============================== DASHBOARD ============================== */
+function pageDashboard(){
+  const total=SCHOOLS.length;
+  const active=SCHOOLS.filter(s=>computeLiveStatus(s)==='Active'||computeLiveStatus(s)==='Trial').length;
+  const expiring=expiringSoonCount();
+  const mrr=SCHOOLS.filter(s=>s.status!=='Suspended'&&daysRemaining(s)>=0).reduce((a,s)=>a+plan(s.plan).price,0);
+  const revenueThisMonth=allInvoices().filter(i=>i.status==='Paid'&&i.date.slice(0,7)==='2026-09').reduce((a,i)=>a+i.amount,0);
+  const byPlan=PLANS.map(p=>({...p,count:SCHOOLS.filter(s=>s.plan===p.id).length}));
+  const monthly=['Apr','May','Jun','Jul','Aug','Sep'].map(m=>{
+    const idx={'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09'}[m];
+    const v=allInvoices().filter(i=>i.status==='Paid'&&i.date.slice(5,7)===idx).reduce((a,i)=>a+i.amount,0);
+    return {m,v};
+  });
+  const maxV=Math.max(...monthly.map(x=>x.v),1);
+  const expiringList=SCHOOLS.filter(s=>{const d=daysRemaining(s);return d>=0&&d<=9&&s.status!=='Suspended';}).sort((a,b)=>daysRemaining(a)-daysRemaining(b));
+  const recent=[...SCHOOLS].sort((a,b)=>b.createdDate.localeCompare(a.createdDate)).slice(0,4);
+
+  return `
+  <div class="page-head fade-in">
+    <div><h1>Platform Dashboard</h1><div class="sub">Good morning, Abbas 👋 — here's how ABTIQON is performing today.</div></div>
+    <button class="btn btn-primary" data-action="open-create-school">${ic('plus',15)} Add School</button>
+  </div>
+  <div class="grid grid-4 stagger" style="margin-bottom:16px;">
+    <div class="stat-card card-hover"><div class="top"><div class="ico" style="background:var(--primary-light);">${ic('school',20)}</div></div><div class="val" data-countup="${total}">0</div><div class="lbl">Total Schools</div><span class="delta delta-up">+${randInt(1,3)} this month</span></div>
+    <div class="stat-card card-hover"><div class="top"><div class="ico" style="background:var(--success-bg);">${ic('check-circle',20)}</div></div><div class="val" data-countup="${active}">0</div><div class="lbl">Active Subscriptions</div><span class="delta delta-info">${total-active} inactive</span></div>
+    <div class="stat-card card-hover"><div class="top"><div class="ico" style="background:var(--warning-bg);">${ic('hourglass',20)}</div></div><div class="val" data-countup="${expiring}">0</div><div class="lbl">Expiring Soon (7d)</div><span class="delta delta-warn">Needs follow-up</span></div>
+    <div class="stat-card card-hover"><div class="top"><div class="ico" style="background:var(--info-bg);">${ic('banknote',20)}</div></div><div class="val" data-countup="${mrr}" data-money="1">Rs. 0</div><div class="lbl">Monthly Recurring Revenue</div><span class="delta delta-up">${fmtMoney(revenueThisMonth)} collected in Sep</span></div>
+  </div>
+  <div class="grid grid-3" style="margin-bottom:16px;align-items:stretch;">
+    <div class="card card-pad" style="grid-column:span 2;">
+      <div style="font-weight:700;margin-bottom:14px;">Revenue Collected — Last 6 Months</div>
+      <div class="mini-bar mini-bar-wrap">${monthly.map(x=>`<div class="bar" style="height:${Math.max(6,x.v/maxV*100)}%;"><span>${x.m}</span></div>`).join('')}</div>
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:14px;">Schools by Plan</div>
+      ${donutChart(byPlan)}
+    </div>
+  </div>
+  <div class="grid grid-2">
+    <div class="card card-pad">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-weight:700;">Expiring Soon</div><a class="crumb" data-action="nav" data-route="#/schools">View All →</a>
+      </div>
+      ${expiringList.length?expiringList.map(s=>`<div class="list-row"><div class="school-logo" style="background:${s.color};width:32px;height:32px;font-size:12px;">${initials(s.name)}</div>
+        <div style="flex:1;"><div style="font-weight:600;">${esc(s.name)}</div><div style="color:var(--muted);font-size:12px;">${daysRemaining(s)} day${daysRemaining(s)===1?'':'s'} left · ${plan(s.plan).name}</div></div>
+        <button class="btn btn-sm btn-primary" data-action="open-extend-access" data-id="${s.id}">Extend</button>
+      </div>`).join(''):`<div class="empty-state" style="padding:24px;">No subscriptions expiring soon ${ic('party-popper',16)}</div>`}
+    </div>
+    <div class="card card-pad">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-weight:700;">Recently Added Schools</div><a class="crumb" data-action="nav" data-route="#/schools">View All →</a>
+      </div>
+      ${recent.map(s=>`<div class="list-row row-click" data-action="nav" data-route="#/school/${s.id}">
+        <div class="school-logo" style="background:${s.color};width:32px;height:32px;font-size:12px;">${initials(s.name)}</div>
+        <div style="flex:1;"><div style="font-weight:600;">${esc(s.name)}</div><div style="color:var(--muted);font-size:12px;">${s.city} · Joined ${fmtDate(s.createdDate)}</div></div>
+        ${statusBadge(computeLiveStatus(s))}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+function donutChart(byPlan){
+  const total=byPlan.reduce((a,p)=>a+p.count,0)||1;
+  let acc=0; const stops=[];
+  byPlan.forEach(p=>{const pct=p.count/total*100; stops.push(`${p.color} ${acc}% ${acc+pct}%`); acc+=pct;});
+  return `<div style="display:flex;align-items:center;gap:16px;">
+    <div class="donut" style="background:conic-gradient(${stops.join(',')});"><div class="donut-hole"><b style="font-size:18px;">${total}</b><span style="font-size:10.5px;color:var(--muted);">Schools</span></div></div>
+    <div>${byPlan.map(p=>`<div style="display:flex;align-items:center;gap:7px;font-size:12.5px;margin-bottom:7px;"><span class="dot-ind" style="background:${p.color};"></span>${p.name} <b style="margin-left:auto;">${p.count}</b></div>`).join('')}</div>
+  </div>`;
+}
+
+/* ============================== SCHOOLS ============================== */
+function pageSchools(){
+  return `
+  <div class="page-head fade-in"><div><h1>Schools</h1><div class="sub">${SCHOOLS.length} schools on the platform</div></div>
+    <button class="btn btn-primary" data-action="open-create-school">${ic('plus',15)} Add School</button></div>
+  <div class="toolbar">
+    <div class="search-input"><span>${ic('search',15)}</span><input id="sch-q" placeholder="Search school / city..." oninput="onSchoolsFilter()"></div>
+    <select class="sel" id="sch-status" onchange="onSchoolsFilter()"><option value="">All Status</option>${['Active','Trial','Expiring Soon','Expired','Suspended'].map(s=>`<option>${s}</option>`).join('')}</select>
+    <select class="sel" id="sch-plan" onchange="onSchoolsFilter()"><option value="">All Plans</option>${PLANS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select>
+  </div>
+  <div class="grid grid-3 stagger" id="school-cards">${schoolCardsHtml()}</div>`;
+}
+window.onSchoolsFilter=function(){
+  STATE.filters.schools.q=document.getElementById('sch-q').value;
+  STATE.filters.schools.status=document.getElementById('sch-status').value;
+  STATE.filters.schools.plan=document.getElementById('sch-plan').value;
+  document.getElementById('school-cards').innerHTML=schoolCardsHtml();
+};
+function schoolCardsHtml(){
+  const f=STATE.filters.schools;
+  let list=SCHOOLS.filter(s=>{
+    if(f.q && !(s.name.toLowerCase().includes(f.q.toLowerCase())||s.city.toLowerCase().includes(f.q.toLowerCase()))) return false;
+    if(f.status && computeLiveStatus(s)!==f.status) return false;
+    if(f.plan && s.plan!==f.plan) return false;
+    return true;
+  });
+  return list.map(s=>{
+    const live=computeLiveStatus(s); const dr=daysRemaining(s); const p=plan(s.plan);
+    const pct=Math.max(0,Math.min(100,Math.round((30-Math.max(0,Math.min(30,30-dr)))/30*100)));
+    const barCls = dr<0?'danger':(dr<=7?'warn':'');
+    return `<div class="school-card card-hover row-click" data-action="nav" data-route="#/school/${s.id}">
+      <div class="ch">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="school-logo" style="background:${s.color};">${initials(s.name)}</div>
+          <div><h3>${esc(s.name)}</h3><div class="city">${s.city}</div></div>
+        </div>
+        ${statusBadge(live)}
+      </div>
+      <div style="display:flex;gap:14px;color:var(--muted);font-size:12px;margin:8px 0;"><span>${ic('graduation-cap',13)} ${s.students} Students</span><span>${wsStatusDot(s.websiteStatus)}</span></div>
+      <div class="plan-pill">
+        <div class="row1"><span>${p.name} Plan</span><b style="color:${dr<0?'var(--danger)':'var(--text)'};">${dr<0?Math.abs(dr)+'d overdue':dr+'d left'}</b></div>
+        <div class="progress ${barCls}"><div style="width:${pct}%;"></div></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-sm btn-primary" style="flex:1;" data-action="open-extend-access" data-id="${s.id}">Extend Access</button>
+        <button class="btn btn-sm btn-ghost" data-action="nav" data-route="#/school/${s.id}">View →</button>
+      </div>
+    </div>`;
+  }).join('') || `<div class="empty-state">No schools match your filters.</div>`;
+}
+
+function pageSchoolDetail(id,tab){
+  const s=schoolById(id); if(!s) return `<div class="empty-state">School not found.</div>`;
+  const live=computeLiveStatus(s); const p=plan(s.plan); const dr=daysRemaining(s);
+  const tabs=[['overview','Overview'],['subscription','Subscription'],['billing','Billing'],['usage','Usage'],['settings','Settings']];
+  return `
+  <a class="crumb" data-action="nav" data-route="#/schools">← Back to Schools</a>
+  <div class="page-head fade-in">
+    <div style="display:flex;gap:16px;align-items:center;">
+      <div class="school-logo" style="background:${s.color};width:56px;height:56px;font-size:19px;">${initials(s.name)}</div>
+      <div><h1 style="margin-bottom:2px;">${esc(s.name)}</h1><div class="sub">${s.city} · ${p.name} Plan · Joined ${fmtDate(s.createdDate)}</div><div style="margin-top:6px;">${statusBadge(live)}</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${s.status==='Suspended'?`<button class="btn btn-success-solid" data-action="toggle-school-status" data-id="${s.id}" data-status="Active">Activate</button>`:`<button class="btn btn-danger" data-action="toggle-school-status" data-id="${s.id}" data-status="Suspended">Suspend</button>`}
+      <button class="btn btn-primary" data-action="open-extend-access" data-id="${s.id}">Extend Access</button>
+    </div>
+  </div>
+  <div class="tabs">${tabs.map(([k,l])=>`<a class="tab ${tab===k?'active':''}" data-action="nav" data-route="#/school/${s.id}/${k}">${l}</a>`).join('')}</div>
+  ${tab==='overview'?schoolOverviewTab(s):tab==='subscription'?schoolSubscriptionTab(s):tab==='billing'?schoolBillingTab(s):tab==='usage'?schoolUsageTab(s):schoolSettingsTab(s)}`;
+}
+function schoolOverviewTab(s){
+  return `<div class="grid grid-2">
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:12px;">School Information</div>
+      ${infoRow('School Name',esc(s.name))}${infoRow('City',s.city)}${infoRow('Address',esc(s.address))}${infoRow('Phone',s.phone)}${infoRow('Email',s.email)}
+      <div style="font-weight:700;margin:16px 0 8px;">School Admin</div>
+      ${infoRow('Name',esc(s.adminName))}${infoRow('Email',s.adminEmail)}
+      <div style="margin-top:12px;"><button class="btn btn-sm" data-action="open-reset-password" data-id="${s.id}">Reset Admin Password</button></div>
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:12px;">Website Status</div>
+      <div style="display:flex;gap:10px;">
+        ${['Live','Maintenance','Suspended'].map(w=>`<button class="btn btn-sm ${s.websiteStatus===w?'btn-primary':''}" data-action="set-website-status" data-id="${s.id}" data-status="${w}">${w}</button>`).join('')}
+      </div>
+      <div style="margin-top:20px;font-weight:700;margin-bottom:10px;">Quick Stats</div>
+      <div class="grid grid-3">
+        <div class="stat-card"><div class="val" style="font-size:19px;">${s.students}</div><div class="lbl">Students</div></div>
+        <div class="stat-card"><div class="val" style="font-size:19px;">${s.teachers}</div><div class="lbl">Teachers</div></div>
+        <div class="stat-card"><div class="val" style="font-size:19px;">${s.storageUsedGB} GB</div><div class="lbl">Storage Used</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+function schoolSubscriptionTab(s){
+  const p=plan(s.plan); const dr=daysRemaining(s);
+  const pct=Math.max(0,Math.min(100,Math.round((30-Math.max(0,Math.min(30,dr)))/30*100)));
+  return `<div class="grid grid-2">
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:12px;">Current Plan</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div><div style="font-size:20px;font-weight:800;">${p.name}</div><div style="color:var(--muted);font-size:12.5px;">${fmtMoney(p.price)} / ${p.cycle}</div></div>
+        <button class="btn btn-sm" data-action="open-change-plan" data-id="${s.id}">Change Plan</button>
+      </div>
+      <ul style="margin:0;padding-left:18px;color:var(--muted);font-size:13px;">${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:12px;">Session / Access Window</div>
+      ${infoRow('Start Date',fmtDate(s.subscriptionStart))}${infoRow('Expiry Date',fmtDate(s.subscriptionEnd))}
+      <div style="margin:14px 0 6px;display:flex;justify-content:space-between;font-size:12.5px;"><span>Time Remaining</span><b style="color:${dr<0?'var(--danger)':'var(--text)'};">${dr<0?Math.abs(dr)+' days overdue':dr+' days left'}</b></div>
+      <div class="progress ${dr<0?'danger':dr<=7?'warn':''}"><div style="width:${pct}%;"></div></div>
+      <button class="btn btn-primary btn-block" style="margin-top:16px;" data-action="open-extend-access" data-id="${s.id}">Extend Access</button>
+    </div>
+  </div>`;
+}
+function schoolBillingTab(s){
+  return `<div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Date</th><th>Plan</th><th>Amount</th><th>Method</th><th>Status</th><th></th></tr></thead><tbody>
+  ${[...s.billingHistory].reverse().map(inv=>`<tr><td style="font-weight:600;">${inv.invoiceNo}</td><td>${fmtDate(inv.date)}</td><td>${plan(inv.plan).name}</td><td>${fmtMoney(inv.amount)}</td><td>${inv.method}</td>
+  <td><span class="badge ${inv.status==='Paid'?'badge-green':'badge-red'}">${inv.status}</span></td>
+  <td>${inv.status==='Overdue'?`<button class="btn btn-sm btn-primary" data-action="mark-invoice-paid" data-id="${inv.id}">Mark Paid</button>`:`<button class="btn btn-sm" data-action="toast-demo" data-msg="Downloading ${inv.invoiceNo}...">Download</button>`}</td>
+  </tr>`).join('')}
+  </tbody></table></div>`;
+}
+function schoolUsageTab(s){
+  const storagePct=Math.min(100,Math.round(s.storageUsedGB/10*100));
+  const studPct=Math.round(s.students/plan(s.plan).maxStudents*100);
+  return `<div class="grid grid-2">
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:14px;">Student Capacity</div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;"><span>${s.students} / ${plan(s.plan).maxStudents} students</span><b>${studPct}%</b></div>
+      <div class="progress ${studPct>90?'danger':studPct>70?'warn':''}"><div style="width:${Math.min(100,studPct)}%;"></div></div>
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:14px;">Storage Usage</div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;"><span>${s.storageUsedGB} GB / 10 GB</span><b>${storagePct}%</b></div>
+      <div class="progress ${storagePct>90?'danger':storagePct>70?'warn':''}"><div style="width:${storagePct}%;"></div></div>
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:10px;">Last Backup</div>
+      ${s.lastBackup?infoRow('Backed up',fmtDateTime(s.lastBackup)):infoRow('Backed up','Never')}
+      ${infoRow('Status',`<span class="badge ${s.lastBackupStatus==='Success'?'badge-green':s.lastBackupStatus==='Failed'?'badge-red':'badge-gray'}">${s.lastBackupStatus}</span>`)}
+      <button class="btn btn-sm" style="margin-top:10px;" data-action="nav" data-route="#/backup">Manage Backups</button>
+    </div>
+  </div>`;
+}
+function schoolSettingsTab(s){
+  return `<div class="card card-pad" style="max-width:520px;">
+    <div class="form-row"><label>School Name</label><input type="text" id="ss-name" value="${esc(s.name)}"></div>
+    <div class="form-2col"><div class="form-row"><label>Phone</label><input type="text" id="ss-phone" value="${s.phone}"></div><div class="form-row"><label>Email</label><input type="text" id="ss-email" value="${s.email}"></div></div>
+    <div class="form-row"><label>Address</label><input type="text" id="ss-address" value="${esc(s.address)}"></div>
+    <button class="btn btn-primary" data-action="save-school-settings" data-id="${s.id}">Save Changes</button>
+    <div class="form-section-title" style="color:var(--danger);">Danger Zone</div>
+    <button class="btn btn-danger" data-action="toggle-school-status" data-id="${s.id}" data-status="${s.status==='Suspended'?'Active':'Suspended'}">${s.status==='Suspended'?'Reactivate School':'Suspend School'}</button>
+  </div>`;
+}
+
+/* ============================== WEBSITE STATUS ============================== */
+function pageWebsiteStatus(){
+  const live=SCHOOLS.filter(s=>s.websiteStatus==='Live').length;
+  const maint=SCHOOLS.filter(s=>s.websiteStatus==='Maintenance').length;
+  const susp=SCHOOLS.filter(s=>s.websiteStatus==='Suspended').length;
+  return `
+  <div class="page-head fade-in"><div><h1>Website Status</h1><div class="sub">Control tenant website availability &amp; monitor system health</div></div></div>
+  <div class="grid grid-3" style="margin-bottom:16px;">
+    <div class="stat-card"><div class="val" style="color:var(--success);">${live}</div><div class="lbl"><span class="live-dot"></span> Live</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--warning);">${maint}</div><div class="lbl"><span class="maint-dot"></span> Under Maintenance</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--danger);">${susp}</div><div class="lbl"><span class="susp-dot"></span> Suspended</div></div>
+  </div>
+  <div class="card card-pad" style="margin-bottom:16px;">
+    <div style="font-weight:700;margin-bottom:12px;">System Health</div>
+    <div class="grid grid-4">
+      ${[['API Gateway','Operational',true],['Database Cluster','Operational',true],['File Storage','Operational',true],['WhatsApp Gateway','Degraded',false]].map(([n,s2,ok])=>`
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="${ok?'live-dot':'maint-dot'}"></span><div><div style="font-weight:600;">${n}</div><div style="color:var(--muted);font-size:11.5px;">${s2}</div></div></div>`).join('')}
+    </div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>School</th><th>Domain</th><th>Status</th><th></th></tr></thead><tbody>
+  ${SCHOOLS.map(s=>`<tr><td style="font-weight:600;">${esc(s.name)}</td><td style="color:var(--muted);">${slug(s.name)}.abtiqon.app</td>
+    <td>${wsStatusDot(s.websiteStatus)}</td>
+    <td><div style="display:flex;gap:6px;">
+      ${['Live','Maintenance','Suspended'].map(w=>`<button class="btn btn-sm ${s.websiteStatus===w?'btn-primary':''}" data-action="set-website-status" data-id="${s.id}" data-status="${w}">${w}</button>`).join('')}
+    </div></td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+/* ============================== BILLING ============================== */
+function billingSubnav(active){
+  const items=[['plans','Plans','#/billing/plans'],['invoices','Invoices','#/billing/invoices'],['payments','Payments','#/billing/payments'],['revenue','Revenue','#/billing/revenue']];
+  return `<div class="page-head fade-in"><div><h1>Billing &amp; Fees</h1><div class="sub">Manage plans, invoices and platform revenue</div></div></div>
+  <div class="tabs">${items.map(([k,l,r])=>`<a class="tab ${active===k?'active':''}" data-action="nav" data-route="${r}">${l}</a>`).join('')}</div>`;
+}
+function pageBilling(tab){
+  if(tab==='invoices') return billingSubnav('invoices')+billingInvoices();
+  if(tab==='payments') return billingSubnav('payments')+billingPayments();
+  if(tab==='revenue') return billingSubnav('revenue')+billingRevenue();
+  return billingSubnav('plans')+billingPlans();
+}
+function billingPlans(){
+  return `<div class="grid grid-3">${PLANS.map(p=>`<div class="card card-pad card-hover">
+    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-weight:800;font-size:17px;">${p.name}</div><span class="badge badge-purple">${SCHOOLS.filter(s=>s.plan===p.id).length} schools</span></div>
+    <div style="font-size:26px;font-weight:800;margin:10px 0 2px;">${fmtMoney(p.price)}<span style="font-size:12px;color:var(--muted);font-weight:600;"> /${p.cycle}</span></div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">Up to ${p.maxStudents} students</div>
+    <ul style="margin:0 0 14px;padding-left:18px;color:var(--muted);font-size:13px;">${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    <button class="btn btn-block" data-action="open-edit-plan" data-id="${p.id}">Edit Plan</button>
+  </div>`).join('')}</div>`;
+}
+function billingInvoices(){
+  const f=STATE.filters.invoices;
+  let list=allInvoices().filter(i=>f.status==='All'?true:i.status===f.status);
+  const totalOverdue=allInvoices().filter(i=>i.status==='Overdue').reduce((a,i)=>a+i.amount,0);
+  return `<div class="grid grid-2" style="margin-bottom:14px;">
+    <div class="stat-card"><div class="lbl">Total Overdue</div><div class="val" style="font-size:20px;color:var(--danger);">${fmtMoney(totalOverdue)}</div></div>
+    <div class="stat-card"><div class="lbl">Total Invoices</div><div class="val" style="font-size:20px;">${allInvoices().length}</div></div>
+  </div>
+  <div class="tabs">${['All','Paid','Overdue'].map(st=>`<a class="tab ${f.status===st?'active':''}" data-action="filter-invoices" data-status="${st}">${st}</a>`).join('')}</div>
+  <div class="table-wrap"><table><thead><tr><th>Invoice</th><th>School</th><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>
+  ${list.slice(0,100).map(inv=>`<tr><td style="font-weight:600;">${inv.invoiceNo}</td><td class="row-click" data-action="nav" data-route="#/school/${inv.schoolId}">${esc(inv.schoolName)}</td><td>${fmtDate(inv.date)}</td><td>${plan(inv.plan).name}</td><td>${fmtMoney(inv.amount)}</td>
+  <td><span class="badge ${inv.status==='Paid'?'badge-green':'badge-red'}">${inv.status}</span></td>
+  <td>${inv.status==='Overdue'?`<div style="display:flex;gap:6px;"><button class="btn btn-sm btn-primary" data-action="mark-invoice-paid" data-id="${inv.id}">Mark Paid</button><button class="btn btn-sm" data-action="open-whatsapp-send" data-id="${inv.schoolId}">Remind</button></div>`:'—'}</td>
+  </tr>`).join('')}
+  </tbody></table></div>`;
+}
+function billingPayments(){
+  const paid=allInvoices().filter(i=>i.status==='Paid');
+  const byMethod={};
+  paid.forEach(i=>{byMethod[i.method]=(byMethod[i.method]||0)+i.amount;});
+  return `<div class="grid grid-2">
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:12px;">Payments by Method</div>
+      ${Object.entries(byMethod).map(([m,v])=>`<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;"><span>${m}</span><b>${fmtMoney(v)}</b></div><div class="progress"><div style="width:${Math.round(v/paid.reduce((a,i)=>a+i.amount,0)*100)}%;"></div></div></div>`).join('')}
+    </div>
+    <div class="card card-pad">
+      <div style="font-weight:700;margin-bottom:10px;">Recent Payments</div>
+      ${paid.slice(0,6).map(p=>`<div class="list-row"><div class="ico2" style="background:var(--success-bg);">${ic('banknote',16)}</div><div style="flex:1;"><div style="font-weight:600;">${esc(p.schoolName)}</div><div style="color:var(--muted);font-size:12px;">${p.method} · ${fmtDate(p.date)}</div></div><b>${fmtMoney(p.amount)}</b></div>`).join('')}
+    </div>
+  </div>`;
+}
+function billingRevenue(){
+  const monthly=['Apr','May','Jun','Jul','Aug','Sep'].map(m=>{
+    const idx={'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09'}[m];
+    return {m,v:allInvoices().filter(i=>i.status==='Paid'&&i.date.slice(5,7)===idx).reduce((a,i)=>a+i.amount,0)};
+  });
+  const maxV=Math.max(...monthly.map(x=>x.v),1);
+  const mrr=SCHOOLS.filter(s=>s.status!=='Suspended'&&daysRemaining(s)>=0).reduce((a,s)=>a+plan(s.plan).price,0);
+  const arpu=Math.round(mrr/Math.max(1,SCHOOLS.filter(s=>s.status!=='Suspended').length));
+  return `<div class="grid grid-3" style="margin-bottom:16px;">
+    <div class="stat-card"><div class="lbl">MRR</div><div class="val" style="font-size:20px;">${fmtMoney(mrr)}</div></div>
+    <div class="stat-card"><div class="lbl">ARPU</div><div class="val" style="font-size:20px;">${fmtMoney(arpu)}</div></div>
+    <div class="stat-card"><div class="lbl">Total Collected (Sep)</div><div class="val" style="font-size:20px;">${fmtMoney(monthly[monthly.length-1].v)}</div></div>
+  </div>
+  <div class="card card-pad">
+    <div style="font-weight:700;margin-bottom:14px;">Monthly Revenue Trend</div>
+    <div class="mini-bar mini-bar-wrap">${monthly.map(x=>`<div class="bar" style="height:${Math.max(6,x.v/maxV*100)}%;"><span>${x.m}</span></div>`).join('')}</div>
+  </div>`;
+}
+
+/* ============================== BACKUP ============================== */
+function pageBackup(){
+  const totalStorage=SCHOOLS.reduce((a,s)=>a+s.storageUsedGB,0);
+  const cap=200;
+  return `
+  <div class="page-head fade-in"><div><h1>Backups</h1><div class="sub">Monitor and trigger school data backups</div></div>
+    <button class="btn btn-primary" data-action="backup-all">${ic('database',15)} Backup All Schools</button></div>
+  <div class="grid grid-3" style="margin-bottom:16px;">
+    <div class="stat-card"><div class="lbl">Storage Used</div><div class="val" style="font-size:20px;">${totalStorage.toFixed(1)} GB / ${cap} GB</div><div class="progress" style="margin-top:8px;"><div style="width:${Math.round(totalStorage/cap*100)}%;"></div></div></div>
+    <div class="stat-card"><div class="lbl">Successful (24h)</div><div class="val" style="font-size:20px;color:var(--success);">${SCHOOLS.filter(s=>s.lastBackupStatus==='Success').length}</div></div>
+    <div class="stat-card"><div class="lbl">Failed / Never</div><div class="val" style="font-size:20px;color:var(--danger);">${SCHOOLS.filter(s=>s.lastBackupStatus!=='Success').length}</div></div>
+  </div>
+  <div class="card card-pad" style="margin-bottom:16px;">
+    <div style="font-weight:700;margin-bottom:12px;">Backup Settings</div>
+    <div class="grid grid-3">
+      <div class="form-row" style="margin-bottom:0;"><label>Frequency</label><select><option>Daily</option><option>Every 12 Hours</option><option>Weekly</option></select></div>
+      <div class="form-row" style="margin-bottom:0;"><label>Retention</label><select><option>7 Days</option><option>30 Days</option><option>90 Days</option></select></div>
+      <div class="form-row" style="margin-bottom:0;"><label>Auto Backup</label><div class="toggle on" data-action="noop" style="margin-top:8px;"><div class="knob"></div></div></div>
+    </div>
+  </div>
+  <div class="table-wrap" id="backup-table">${backupTableHtml()}</div>`;
+}
+function backupTableHtml(){
+  return `<table><thead><tr><th>School</th><th>Last Backup</th><th>Status</th><th>Size</th><th></th></tr></thead><tbody id="backup-tbody">
+  ${SCHOOLS.map(s=>`<tr id="backup-row-${s.id}"><td style="font-weight:600;">${esc(s.name)}</td><td>${s.lastBackup?fmtDateTime(s.lastBackup):'Never'}</td>
+  <td><span class="badge ${s.lastBackupStatus==='Success'?'badge-green':s.lastBackupStatus==='Failed'?'badge-red':'badge-gray'}">${s.lastBackupStatus}</span></td>
+  <td>${s.storageUsedGB} GB</td>
+  <td><div style="display:flex;gap:6px;"><button class="btn btn-sm btn-primary" data-action="backup-now" data-id="${s.id}">Backup Now</button><button class="btn btn-sm" data-action="toast-demo" data-msg="Downloading backup for ${esc(s.name)}...">Download</button></div></td>
+  </tr>`).join('')}
+  </tbody></table>`;
+}
+
+/* ============================== SETTINGS ============================== */
+function pageSettings(tab){
+  const tabs=[['profile','Profile'],['notifications','Notifications'],['security','Security']];
+  let body='';
+  if(tab==='notifications') body=`<div class="card card-pad" style="max-width:500px;">
+    ${['New school signup','Payment received','Subscription expiring (7 days)','Backup failure alerts'].map(x=>`<div class="check-row" style="justify-content:space-between;"><span>${x}</span><div class="toggle on" data-action="toggle-switch"><div class="knob"></div></div></div>`).join('')}
+  </div>`;
+  else if(tab==='security') body=`<div class="card card-pad" style="max-width:500px;">
+    <div class="form-row"><label>Current Password</label><input type="password" placeholder="••••••••"></div>
+    <div class="form-row"><label>New Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" data-action="toast-demo" data-msg="Password updated.">Update Password</button>
+  </div>`;
+  else body=`<div class="card card-pad" style="max-width:500px;">
+    <div class="form-row"><label>Name</label><input type="text" value="Abbas"></div>
+    <div class="form-row"><label>Email</label><input type="text" value="abbas@abtiqon.dev"></div>
+    <button class="btn btn-primary" data-action="toast-demo" data-msg="Profile saved.">Save Changes</button>
+  </div>`;
+  return `<div class="page-head fade-in"><div><h1>Settings</h1></div></div>
+  <div class="tabs">${tabs.map(([k,l])=>`<a class="tab ${tab===k?'active':''}" data-action="nav" data-route="#/settings/${k}">${l}</a>`).join('')}</div>${body}`;
+}
+
+/* ============================== EVENT DELEGATION ============================== */
+document.addEventListener('click', function(e){
+  const el=e.target.closest('[data-action]'); if(!el) return;
+  const a=el.dataset.action;
+
+  if(a==='nav') go(el.dataset.route);
+  else if(a==='toggle-sidebar'){STATE.sidebarCollapsed=!STATE.sidebarCollapsed;document.getElementById('sidebar').classList.toggle('collapsed');el.textContent=STATE.sidebarCollapsed?'›':'‹';}
+  else if(a==='close-modal'||a==='close-modal-bg'){if(a==='close-modal-bg'&&e.target!==el)return;closeModal();}
+  else if(a==='toast-demo'){toast(el.dataset.msg);}
+  else if(a==='noop'){/* visual only */}
+  else if(a==='toggle-switch'){el.classList.toggle('on');}
+
+  /* ---- Create school ---- */
+  else if(a==='open-create-school'){STATE.newSchoolStep=1;openModal(createSchoolModal(1),'modal-lg');}
+  else if(a==='create-school-next'){
+    if(!validateSchoolStep1())return;
+    STATE.newSchoolStep=2; openModal(createSchoolModal(2),'modal-lg');
+  }
+  else if(a==='create-school-back'){STATE.newSchoolStep=1;openModal(createSchoolModal(1),'modal-lg');}
+  else if(a==='pick-new-plan'){
+    document.querySelectorAll('.plan-pick').forEach(c=>c.classList.remove('selected-plan'));
+    el.classList.add('selected-plan');
+    STATE.pickedPlan=el.dataset.plan;
+  }
+  else if(a==='submit-create-school'){
+    const name=document.getElementById('ns-name').value.trim();
+    const city=document.getElementById('ns-city').value.trim();
+    const adminName=document.getElementById('ns-admin-name').value.trim();
+    const adminEmail=document.getElementById('ns-admin-email').value.trim();
+    const planId=STATE.pickedPlan||'basic';
+    if(!name||!adminName||!adminEmail){toast('Please complete all required fields.','warn');return;}
+    const password=genPassword();
+    const id='sch_'+slug(name)+'_'+Date.now().toString(36).slice(-4);
+    const school={
+      id,name,city:city||'—',address:document.getElementById('ns-address').value||'—',
+      phone:document.getElementById('ns-phone').value||'—',email:document.getElementById('ns-email').value||('info@'+slug(name)+'.edu.pk'),
+      adminName,adminEmail,adminPassword:password,
+      plan:planId,status:'Active',websiteStatus:'Live',
+      createdDate:APP_TODAY_STR,subscriptionStart:APP_TODAY_STR,subscriptionEnd:addDays(APP_TODAY_STR,30),
+      students:0,teachers:0,storageUsedGB:0.1,lastBackup:null,lastBackupStatus:'Never',
+      color:schoolColor(name),
+      billingHistory:[{id:uid('inv'),invoiceNo:'INV-'+(4000+SCHOOLS.length),date:APP_TODAY_STR,amount:plan(planId).price,plan:planId,status:'Paid',method:'Bank Transfer'}],
+    };
+    SCHOOLS.push(school);
+    openModal(schoolCreatedModal(school),'modal-lg');
+  }
+  /* ---- Extend access ---- */
+  else if(a==='open-extend-access'){openModal(extendAccessModal(el.dataset.id));}
+  else if(a==='submit-extend-access'){
+    const s=schoolById(el.dataset.id);
+    const months=Number(document.getElementById('ea-months').value);
+    const base = daysRemaining(s)>0 ? s.subscriptionEnd : APP_TODAY_STR;
+    s.subscriptionEnd=addDays(base,months*30);
+    s.status='Active';
+    const amt=Number(document.getElementById('ea-amount').value||plan(s.plan).price*months);
+    s.billingHistory.push({id:uid('inv'),invoiceNo:'INV-'+(5000+randInt(1,9999)),date:APP_TODAY_STR,amount:amt,plan:s.plan,status:'Paid',method:document.getElementById('ea-method').value});
+    closeModal(); toast(`Access extended — new expiry ${fmtDate(s.subscriptionEnd)}.`); route();
+  }
+  /* ---- School status / website ---- */
+  else if(a==='toggle-school-status'){
+    const s=schoolById(el.dataset.id); s.status=el.dataset.status;
+    if(el.dataset.status==='Suspended') s.websiteStatus='Suspended'; else if(s.websiteStatus==='Suspended') s.websiteStatus='Live';
+    toast(`${s.name} ${el.dataset.status==='Suspended'?'suspended':'activated'}.`); route();
+  }
+  else if(a==='set-website-status'){
+    const s=schoolById(el.dataset.id); s.websiteStatus=el.dataset.status;
+    toast(`${s.name} website set to ${el.dataset.status}.`); route();
+  }
+  else if(a==='open-reset-password'){openModal(resetPasswordModal(el.dataset.id));}
+  else if(a==='confirm-reset-password'){
+    const s=schoolById(el.dataset.id); s.adminPassword=genPassword();
+    openModal(schoolCreatedModal(s,true),'modal-lg');
+  }
+  else if(a==='open-change-plan'){openModal(changePlanModal(el.dataset.id));}
+  else if(a==='submit-change-plan'){
+    const s=schoolById(el.dataset.id); const newPlan=document.querySelector('.plan-pick.selected-plan')?.dataset.plan||s.plan;
+    s.plan=newPlan; closeModal(); toast(`Plan changed to ${plan(newPlan).name}.`); route();
+  }
+  else if(a==='save-school-settings'){
+    const s=schoolById(el.dataset.id);
+    s.name=document.getElementById('ss-name').value||s.name;
+    s.phone=document.getElementById('ss-phone').value||s.phone;
+    s.email=document.getElementById('ss-email').value||s.email;
+    s.address=document.getElementById('ss-address').value||s.address;
+    toast('School settings saved.'); route();
+  }
+  /* ---- Billing ---- */
+  else if(a==='filter-invoices'){STATE.filters.invoices.status=el.dataset.status;route();}
+  else if(a==='mark-invoice-paid'){
+    for(const s of SCHOOLS){const inv=s.billingHistory.find(i=>i.id===el.dataset.id); if(inv){inv.status='Paid'; if(daysRemaining(s)<0){s.subscriptionEnd=addDays(APP_TODAY_STR,30);s.status='Active';} break;}}
+    toast('Invoice marked as paid.'); route();
+  }
+  else if(a==='open-edit-plan'){openModal(editPlanModal(el.dataset.id));}
+  else if(a==='submit-edit-plan'){
+    const p=plan(el.dataset.id); p.price=Number(document.getElementById('ep-price').value)||p.price; p.maxStudents=Number(document.getElementById('ep-max').value)||p.maxStudents;
+    closeModal(); toast(`${p.name} plan updated.`); route();
+  }
+  else if(a==='open-whatsapp-send'){openModal(whatsappReminderModal(el.dataset.id));}
+  else if(a==='confirm-whatsapp-send'){closeModal();toast('Reminder sent on WhatsApp ✓');}
+  /* ---- Backup ---- */
+  else if(a==='backup-now'){
+    const s=schoolById(el.dataset.id);
+    const row=document.getElementById('backup-row-'+s.id);
+    if(row) row.innerHTML=`<td colspan="5" style="text-align:center;"><span class="spinner spinner-dark" style="border-top-color:var(--primary);"></span> Backing up ${esc(s.name)}...</td>`;
+    setTimeout(()=>{
+      s.lastBackup=new Date().toISOString(); s.lastBackupStatus='Success';
+      const tbl=document.getElementById('backup-table'); if(tbl) tbl.innerHTML=backupTableHtml();
+      toast(`Backup completed for ${s.name}.`);
+    },1200);
+  }
+  else if(a==='backup-all'){
+    toast('Backing up all schools — this may take a moment...','warn');
+    setTimeout(()=>{
+      SCHOOLS.forEach(s=>{s.lastBackup=new Date().toISOString();s.lastBackupStatus='Success';});
+      const tbl=document.getElementById('backup-table'); if(tbl) tbl.innerHTML=backupTableHtml();
+      toast('All schools backed up successfully ✓');
+    },1500);
+  }
+  /* ---- Copy credentials ---- */
+  else if(a==='copy-text'){
+    navigator.clipboard?.writeText(el.dataset.value).then(()=>toast('Copied to clipboard.')).catch(()=>toast('Copy failed — select manually.','warn'));
+  }
+});
+
+/* ============================== MODALS ============================== */
+function validateSchoolStep1(){
+  const name=document.getElementById('ns-name').value.trim();
+  const adminName=document.getElementById('ns-admin-name').value.trim();
+  const adminEmail=document.getElementById('ns-admin-email').value.trim();
+  if(!name){toast('School name is required.','warn');return false;}
+  if(!adminName||!adminEmail){toast('Admin name & email are required.','warn');return false;}
+  return true;
+}
+function createSchoolModal(step){
+  if(step===1){
+    return `<div class="modal-head"><h3>Add New School</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+    <div class="modal-body">
+      <div class="step-dots"><span class="active"></span><span></span></div>
+      <div class="hint" style="margin-bottom:14px;">Step 1 of 2 — School &amp; Admin Details</div>
+      <div class="form-section-title">School Information</div>
+      <div class="form-row"><label>School Name *</label><input type="text" id="ns-name" placeholder="e.g. Greenfield Academy"></div>
+      <div class="form-2col"><div class="form-row"><label>City</label><input type="text" id="ns-city" placeholder="e.g. Islamabad"></div><div class="form-row"><label>Phone</label><input type="tel" id="ns-phone" placeholder="051-1234567"></div></div>
+      <div class="form-2col"><div class="form-row"><label>Email</label><input type="email" id="ns-email" placeholder="info@school.edu.pk"></div><div class="form-row"><label>Address</label><input type="text" id="ns-address"></div></div>
+      <div class="form-section-title">School Admin Account</div>
+      <div class="form-2col"><div class="form-row"><label>Admin Name *</label><input type="text" id="ns-admin-name" placeholder="e.g. Muhammad Khan"></div><div class="form-row"><label>Admin Email *</label><input type="email" id="ns-admin-email" placeholder="admin@school.edu.pk"></div></div>
+      <div class="hint">A secure login password will be auto-generated for this admin in the next step.</div>
+    </div>
+    <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="create-school-next">Next: Choose Plan →</button></div>`;
+  }
+  return `<div class="modal-head"><h3>Add New School</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body">
+    <div class="step-dots"><span class="active"></span><span class="active"></span></div>
+    <div class="hint" style="margin-bottom:14px;">Step 2 of 2 — Choose a Subscription Plan</div>
+    <div class="grid grid-3">
+    ${PLANS.map((p,i)=>`<div class="card card-pad plan-pick ${i===0?'selected-plan':''}" data-action="pick-new-plan" data-plan="${p.id}" style="cursor:pointer;border-width:2px;">
+      <div style="font-weight:800;">${p.name}</div><div style="font-size:19px;font-weight:800;margin:6px 0;">${fmtMoney(p.price)}<span style="font-size:11px;color:var(--muted);font-weight:600;">/mo</span></div>
+      <div style="color:var(--muted);font-size:11.5px;">Up to ${p.maxStudents} students</div>
+    </div>`).join('')}
+    </div>
+    <div class="hint" style="margin-top:14px;">First payment grants 1 month of access from today. You can extend access anytime from the school's page.</div>
+  </div>
+  <div class="modal-foot"><button class="btn" data-action="create-school-back">← Back</button><button class="btn btn-primary" data-action="submit-create-school">Create School</button></div>
+  <style>.plan-pick.selected-plan{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}</style>`;
+}
+function schoolCreatedModal(s,isReset){
+  return `<div class="modal-head"><h3>${isReset?'Password Reset':ic('party-popper',18)+' School Created Successfully'}</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body">
+    ${isReset?'':`<p style="color:var(--muted);">${esc(s.name)} is now live with 1 month of access. Share these credentials with the school admin securely.</p>`}
+    ${isReset?`<p style="color:var(--muted);">A new password has been generated for ${esc(s.adminName)}.</p>`:''}
+    <div class="cred-box"><div><div style="font-size:11px;color:var(--muted);">Login Email</div><div class="v">${s.adminEmail}</div></div><button class="copy-btn" data-action="copy-text" data-value="${s.adminEmail}">Copy</button></div>
+    <div class="cred-box"><div><div style="font-size:11px;color:var(--muted);">Password</div><div class="v">${s.adminPassword}</div></div><button class="copy-btn" data-action="copy-text" data-value="${s.adminPassword}">Copy</button></div>
+    <div class="hint">⚠ This password is shown only once. Make sure to save or share it now.</div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-primary btn-block" data-action="close-modal">Done</button></div>`;
+}
+function resetPasswordModal(id){
+  const s=schoolById(id);
+  return `<div class="modal-head"><h3>Reset Admin Password</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body">Generate a new login password for <b>${esc(s.adminName)}</b> (${s.adminEmail})? The current password will stop working immediately.</div>
+  <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="confirm-reset-password" data-id="${id}">Generate New Password</button></div>`;
+}
+function extendAccessModal(id){
+  const s=schoolById(id); const p=plan(s.plan);
+  return `<div class="modal-head"><h3>Extend Access</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body">
+    <div style="font-weight:700;">${esc(s.name)}</div>
+    <div style="color:var(--muted);font-size:12.5px;margin-bottom:14px;">Current expiry: ${fmtDate(s.subscriptionEnd)} (${daysRemaining(s)<0?Math.abs(daysRemaining(s))+' days overdue':daysRemaining(s)+' days left'})</div>
+    <div class="form-row"><label>Extend By</label><select id="ea-months" onchange="document.getElementById('ea-amount').value=${p.price}*Number(this.value);">
+      <option value="1">1 Month</option><option value="3">3 Months</option><option value="6">6 Months</option><option value="12">12 Months</option>
+    </select></div>
+    <div class="form-row"><label>Amount Received</label><input type="number" id="ea-amount" value="${p.price}"></div>
+    <div class="form-row"><label>Payment Method</label><select id="ea-method"><option>Bank Transfer</option><option>Cash</option><option>Online</option></select></div>
+  </div>
+  <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="submit-extend-access" data-id="${id}">Confirm &amp; Extend</button></div>`;
+}
+function changePlanModal(id){
+  const s=schoolById(id);
+  return `<div class="modal-head"><h3>Change Plan</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body"><div class="grid grid-3">
+  ${PLANS.map(p=>`<div class="card card-pad plan-pick ${p.id===s.plan?'selected-plan':''}" data-action="pick-new-plan" data-plan="${p.id}" style="cursor:pointer;border-width:2px;">
+    <div style="font-weight:800;">${p.name}</div><div style="font-size:18px;font-weight:800;margin:6px 0;">${fmtMoney(p.price)}<span style="font-size:11px;color:var(--muted);">/mo</span></div>
+  </div>`).join('')}
+  </div></div>
+  <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="submit-change-plan" data-id="${id}">Save Plan</button></div>
+  <style>.plan-pick.selected-plan{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light);}</style>`;
+}
+function editPlanModal(id){
+  const p=plan(id);
+  return `<div class="modal-head"><h3>Edit ${p.name} Plan</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body">
+    <div class="form-2col"><div class="form-row"><label>Price (per month)</label><input type="number" id="ep-price" value="${p.price}"></div><div class="form-row"><label>Max Students</label><input type="number" id="ep-max" value="${p.maxStudents}"></div></div>
+  </div>
+  <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="submit-edit-plan" data-id="${id}">Save Changes</button></div>`;
+}
+function whatsappReminderModal(schoolId){
+  const s=schoolById(schoolId);
+  const msg=`Assalam-o-Alaikum,\nThis is a reminder that your ABTIQON subscription payment is overdue.\n\nSchool: ${s.name}\nAmount Due: ${fmtMoney(plan(s.plan).price)}\n\nPlease clear the dues to avoid service suspension.\n\nThank you.`;
+  return `<div class="modal-head"><h3>Send Payment Reminder</h3><button class="modal-close" data-action="close-modal">${ic('x',16)}</button></div>
+  <div class="modal-body"><div class="form-row"><label>Message</label><textarea rows="7">${esc(msg)}</textarea></div></div>
+  <div class="modal-foot"><button class="btn" data-action="close-modal">Cancel</button><button class="btn btn-primary" data-action="confirm-whatsapp-send">Send WhatsApp</button></div>`;
+}
+
+/* ============================== INIT ============================== */
+loadData();
+</script>
+</body>
+</html>

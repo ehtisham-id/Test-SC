@@ -1,0 +1,901 @@
+{
+  "status": "success",
+  "meta": {
+    "apiVersion": "1.0",
+    "generatedAt": "2026-09-17T04:54:35.081Z",
+    "today": "2026-09-14",
+    "source": "ABTIQON Control Plane API (simulated)"
+  },
+  "data": {
+    "plans": [
+      {
+        "id": "basic",
+        "name": "Basic",
+        "price": 5000,
+        "cycle": "month",
+        "maxStudents": 150,
+        "color": "#0EA5E9",
+        "features": [
+          "1 Campus",
+          "Student & Fee Management",
+          "Email Support"
+        ]
+      },
+      {
+        "id": "standard",
+        "name": "Standard",
+        "price": 12000,
+        "cycle": "month",
+        "maxStudents": 500,
+        "color": "#7C3AED",
+        "features": [
+          "Up to 3 Campuses",
+          "Attendance & Exams",
+          "WhatsApp Integration",
+          "Priority Support"
+        ]
+      },
+      {
+        "id": "premium",
+        "name": "Premium",
+        "price": 25000,
+        "cycle": "month",
+        "maxStudents": 2000,
+        "color": "#F59E0B",
+        "features": [
+          "Unlimited Campuses",
+          "Custom Branding",
+          "API Access",
+          "Dedicated Support"
+        ]
+      }
+    ],
+    "schools": [
+      {
+        "id": "sch_greenfield0",
+        "name": "Greenfield Academy",
+        "city": "Islamabad",
+        "address": "Sector DHA, Islamabad",
+        "phone": "051-9421962",
+        "email": "info@greenfield.edu.pk",
+        "adminName": "Rabia Sheikh",
+        "adminEmail": "rabiasheik.admin@greenfield.edu.pk",
+        "adminPassword": "dCaDN725!",
+        "plan": "premium",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-02-19",
+        "subscriptionStart": "2026-02-19",
+        "subscriptionEnd": "2026-10-08",
+        "students": 606,
+        "teachers": 28,
+        "storageUsedGB": 5.1,
+        "lastBackup": "2026-09-16T04:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_g9qddf2",
+            "invoiceNo": "INV-3000",
+            "date": "2026-02-19",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_3tz70ku",
+            "invoiceNo": "INV-3001",
+            "date": "2026-03-21",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_rr9m6xr",
+            "invoiceNo": "INV-3002",
+            "date": "2026-04-20",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_sp546qu",
+            "invoiceNo": "INV-3003",
+            "date": "2026-05-20",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_djhyo8l",
+            "invoiceNo": "INV-3004",
+            "date": "2026-06-19",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      },
+      {
+        "id": "sch_alnoorscho1",
+        "name": "Al-Noor School System",
+        "city": "Lahore",
+        "address": "Sector G-9, Lahore",
+        "phone": "051-2034673",
+        "email": "info@alnoorscho.edu.pk",
+        "adminName": "Imran Javed",
+        "adminEmail": "imranjaved.admin@alnoorscho.edu.pk",
+        "adminPassword": "dUbYn768@",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-07-07",
+        "subscriptionStart": "2026-07-07",
+        "subscriptionEnd": "2026-09-18",
+        "students": 715,
+        "teachers": 33,
+        "storageUsedGB": 1.1,
+        "lastBackup": "2026-09-15T18:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#0EA5E9",
+        "billingHistory": [
+          {
+            "id": "inv_da59wqs",
+            "invoiceNo": "INV-3010",
+            "date": "2026-07-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_cn0sllc",
+            "invoiceNo": "INV-3011",
+            "date": "2026-08-06",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_8m9yziq",
+            "invoiceNo": "INV-3012",
+            "date": "2026-09-05",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_uxnieoi",
+            "invoiceNo": "INV-3013",
+            "date": "2026-10-05",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_el939zu",
+            "invoiceNo": "INV-3014",
+            "date": "2026-11-04",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_citygramma2",
+        "name": "City Grammar School",
+        "city": "Karachi",
+        "address": "Sector Model Town, Karachi",
+        "phone": "051-7019870",
+        "email": "info@citygramma.edu.pk",
+        "adminName": "Ahmed Sheikh",
+        "adminEmail": "ahmedsheik.admin@citygramma.edu.pk",
+        "adminPassword": "Ppsru989@",
+        "plan": "standard",
+        "status": "Trial",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-26",
+        "subscriptionStart": "2026-03-26",
+        "subscriptionEnd": "2026-09-23",
+        "students": 345,
+        "teachers": 16,
+        "storageUsedGB": 3.2,
+        "lastBackup": "2026-09-14T19:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#6366F1",
+        "billingHistory": [
+          {
+            "id": "inv_91zqwru",
+            "invoiceNo": "INV-3020",
+            "date": "2026-03-26",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_qk4q4iw",
+            "invoiceNo": "INV-3021",
+            "date": "2026-04-25",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_1ex583k",
+            "invoiceNo": "INV-3022",
+            "date": "2026-05-25",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_xlbydtl",
+            "invoiceNo": "INV-3023",
+            "date": "2026-06-24",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_brightfutu3",
+        "name": "Bright Future Academy",
+        "city": "Rawalpindi",
+        "address": "Sector DHA, Rawalpindi",
+        "phone": "051-2605273",
+        "email": "info@brightfutu.edu.pk",
+        "adminName": "Bilal Malik",
+        "adminEmail": "bilalmalik.admin@brightfutu.edu.pk",
+        "adminPassword": "eVcfG238$",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-05-02",
+        "subscriptionStart": "2026-05-02",
+        "subscriptionEnd": "2026-10-01",
+        "students": 828,
+        "teachers": 38,
+        "storageUsedGB": 2.8,
+        "lastBackup": "2026-09-16T15:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_a03t3rv",
+            "invoiceNo": "INV-3030",
+            "date": "2026-05-02",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_zh0ois0",
+            "invoiceNo": "INV-3031",
+            "date": "2026-06-01",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_puee79h",
+            "invoiceNo": "INV-3032",
+            "date": "2026-07-01",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_m4t4vx7",
+            "invoiceNo": "INV-3033",
+            "date": "2026-07-31",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      },
+      {
+        "id": "sch_thelearnin4",
+        "name": "The Learning Tree School",
+        "city": "Multan",
+        "address": "Sector G-9, Multan",
+        "phone": "051-4854662",
+        "email": "info@thelearnin.edu.pk",
+        "adminName": "Nida Iqbal",
+        "adminEmail": "nidaiqbal.admin@thelearnin.edu.pk",
+        "adminPassword": "qHWKq387#",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-04-12",
+        "subscriptionStart": "2026-04-12",
+        "subscriptionEnd": "2026-09-20",
+        "students": 187,
+        "teachers": 9,
+        "storageUsedGB": 1.7,
+        "lastBackup": "2026-09-16T07:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_5b7wx8v",
+            "invoiceNo": "INV-3040",
+            "date": "2026-04-12",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_egc7ro0",
+            "invoiceNo": "INV-3041",
+            "date": "2026-05-12",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_sh99yel",
+            "invoiceNo": "INV-3042",
+            "date": "2026-06-11",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_iqramodels5",
+        "name": "Iqra Model School",
+        "city": "Faisalabad",
+        "address": "Sector Model Town, Faisalabad",
+        "phone": "051-5415568",
+        "email": "info@iqramodels.edu.pk",
+        "adminName": "Ayesha Farooq",
+        "adminEmail": "ayeshafaro.admin@iqramodels.edu.pk",
+        "adminPassword": "mxygb678@",
+        "plan": "premium",
+        "status": "Trial",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-25",
+        "subscriptionStart": "2026-03-25",
+        "subscriptionEnd": "2026-09-17",
+        "students": 317,
+        "teachers": 14,
+        "storageUsedGB": 0.6,
+        "lastBackup": "2026-09-15T19:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EF4444",
+        "billingHistory": [
+          {
+            "id": "inv_4n27b36",
+            "invoiceNo": "INV-3050",
+            "date": "2026-03-25",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_4m06m23",
+            "invoiceNo": "INV-3051",
+            "date": "2026-04-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_dt4ucoi",
+            "invoiceNo": "INV-3052",
+            "date": "2026-05-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_falconhous6",
+        "name": "Falcon House School",
+        "city": "Peshawar",
+        "address": "Sector G-9, Peshawar",
+        "phone": "051-8777910",
+        "email": "info@falconhous.edu.pk",
+        "adminName": "Ahmed Abbasi",
+        "adminEmail": "ahmedabbas.admin@falconhous.edu.pk",
+        "adminPassword": "jUwSf775@",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-05-02",
+        "subscriptionStart": "2026-05-02",
+        "subscriptionEnd": "2026-09-30",
+        "students": 125,
+        "teachers": 6,
+        "storageUsedGB": 0.9,
+        "lastBackup": "2026-09-16T11:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#EC4899",
+        "billingHistory": [
+          {
+            "id": "inv_ajev7do",
+            "invoiceNo": "INV-3060",
+            "date": "2026-05-02",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_dpsnupp",
+            "invoiceNo": "INV-3061",
+            "date": "2026-06-01",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_ngwuxyx",
+            "invoiceNo": "INV-3062",
+            "date": "2026-07-01",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_acf3ori",
+            "invoiceNo": "INV-3063",
+            "date": "2026-07-31",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_horizonint7",
+        "name": "Horizon International School",
+        "city": "Quetta",
+        "address": "Sector Model Town, Quetta",
+        "phone": "051-5382904",
+        "email": "info@horizonint.edu.pk",
+        "adminName": "Ayesha Qureshi",
+        "adminEmail": "ayeshaqure.admin@horizonint.edu.pk",
+        "adminPassword": "nkhjk472@",
+        "plan": "basic",
+        "status": "Expired",
+        "websiteStatus": "Suspended",
+        "createdDate": "2026-02-16",
+        "subscriptionStart": "2026-02-16",
+        "subscriptionEnd": "2026-08-31",
+        "students": 173,
+        "teachers": 8,
+        "storageUsedGB": 0.7,
+        "lastBackup": "2026-09-15T07:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_y0mwwr5",
+            "invoiceNo": "INV-3070",
+            "date": "2026-02-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_9wtwl63",
+            "invoiceNo": "INV-3071",
+            "date": "2026-03-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_e634z2b",
+            "invoiceNo": "INV-3072",
+            "date": "2026-04-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_alhudaacad8",
+        "name": "Al-Huda Academy",
+        "city": "Sialkot",
+        "address": "Sector DHA, Sialkot",
+        "phone": "051-6025481",
+        "email": "info@alhudaacad.edu.pk",
+        "adminName": "Kashif Sheikh",
+        "adminEmail": "kashifshei.admin@alhudaacad.edu.pk",
+        "adminPassword": "MWsbb588@",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-02-16",
+        "subscriptionStart": "2026-02-16",
+        "subscriptionEnd": "2026-09-28",
+        "students": 846,
+        "teachers": 38,
+        "storageUsedGB": 2.1,
+        "lastBackup": "2026-09-16T08:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_38qz3in",
+            "invoiceNo": "INV-3080",
+            "date": "2026-02-16",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_ljlgp06",
+            "invoiceNo": "INV-3081",
+            "date": "2026-03-18",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_fssqml3",
+            "invoiceNo": "INV-3082",
+            "date": "2026-04-17",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_dhlxdd1",
+            "invoiceNo": "INV-3083",
+            "date": "2026-05-17",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_crescentpu9",
+        "name": "Crescent Public School",
+        "city": "Gujranwala",
+        "address": "Sector I-8, Gujranwala",
+        "phone": "051-4782932",
+        "email": "info@crescentpu.edu.pk",
+        "adminName": "Kashif Baig",
+        "adminEmail": "kashifbaig.admin@crescentpu.edu.pk",
+        "adminPassword": "ymgTG445!",
+        "plan": "basic",
+        "status": "Suspended",
+        "websiteStatus": "Suspended",
+        "createdDate": "2026-03-19",
+        "subscriptionStart": "2026-03-19",
+        "subscriptionEnd": "2026-08-05",
+        "students": 321,
+        "teachers": 15,
+        "storageUsedGB": 4,
+        "lastBackup": "2026-09-15T11:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_u9jj0c0",
+            "invoiceNo": "INV-3090",
+            "date": "2026-03-19",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_7qi48uu",
+            "invoiceNo": "INV-3091",
+            "date": "2026-04-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_6wm3dae",
+            "invoiceNo": "INV-3092",
+            "date": "2026-05-18",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_xnv1e8x",
+            "invoiceNo": "INV-3093",
+            "date": "2026-06-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_0exfslb",
+            "invoiceNo": "INV-3094",
+            "date": "2026-07-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_eliteschol10",
+        "name": "Elite Scholars School",
+        "city": "Hyderabad",
+        "address": "Sector G-9, Hyderabad",
+        "phone": "051-9009870",
+        "email": "info@eliteschol.edu.pk",
+        "adminName": "Sana Iqbal",
+        "adminEmail": "sanaiqbal.admin@eliteschol.edu.pk",
+        "adminPassword": "WwCKa928@",
+        "plan": "premium",
+        "status": "Expired",
+        "websiteStatus": "Maintenance",
+        "createdDate": "2026-03-25",
+        "subscriptionStart": "2026-03-25",
+        "subscriptionEnd": "2026-09-11",
+        "students": 507,
+        "teachers": 23,
+        "storageUsedGB": 3.1,
+        "lastBackup": "2026-09-14T04:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#6366F1",
+        "billingHistory": [
+          {
+            "id": "inv_6smick8",
+            "invoiceNo": "INV-3100",
+            "date": "2026-03-25",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_bad89xx",
+            "invoiceNo": "INV-3101",
+            "date": "2026-04-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_rpv9qpf",
+            "invoiceNo": "INV-3102",
+            "date": "2026-05-24",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_gg5hqqc",
+            "invoiceNo": "INV-3103",
+            "date": "2026-06-23",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_bvfgrjt",
+            "invoiceNo": "INV-3104",
+            "date": "2026-07-23",
+            "amount": 25000,
+            "plan": "premium",
+            "status": "Overdue",
+            "method": "Online"
+          }
+        ]
+      },
+      {
+        "id": "sch_nishatacad11",
+        "name": "Nishat Academy",
+        "city": "Bahawalpur",
+        "address": "Sector F-10, Bahawalpur",
+        "phone": "051-3193684",
+        "email": "info@nishatacad.edu.pk",
+        "adminName": "Imran Malik",
+        "adminEmail": "imranmalik.admin@nishatacad.edu.pk",
+        "adminPassword": "fSAcY452@",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-17",
+        "subscriptionStart": "2026-03-17",
+        "subscriptionEnd": "2026-10-12",
+        "students": 611,
+        "teachers": 28,
+        "storageUsedGB": 0.6,
+        "lastBackup": null,
+        "lastBackupStatus": "Never",
+        "color": "#14B8A6",
+        "billingHistory": [
+          {
+            "id": "inv_zh22omd",
+            "invoiceNo": "INV-3110",
+            "date": "2026-03-17",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_6drgr6n",
+            "invoiceNo": "INV-3111",
+            "date": "2026-04-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          },
+          {
+            "id": "inv_jfqdout",
+            "invoiceNo": "INV-3112",
+            "date": "2026-05-16",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_h1bmoog",
+            "invoiceNo": "INV-3113",
+            "date": "2026-06-15",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_457phvt",
+            "invoiceNo": "INV-3114",
+            "date": "2026-07-15",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_sunrisepub12",
+        "name": "Sunrise Public School",
+        "city": "Abbottabad",
+        "address": "Sector F-10, Abbottabad",
+        "phone": "051-8991390",
+        "email": "info@sunrisepub.edu.pk",
+        "adminName": "Sana Javed",
+        "adminEmail": "sanajaved.admin@sunrisepub.edu.pk",
+        "adminPassword": "YVYHK443#",
+        "plan": "standard",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-03-08",
+        "subscriptionStart": "2026-03-08",
+        "subscriptionEnd": "2026-10-11",
+        "students": 718,
+        "teachers": 33,
+        "storageUsedGB": 1.8,
+        "lastBackup": "2026-09-16T08:54:35.081Z",
+        "lastBackupStatus": "Failed",
+        "color": "#7C3AED",
+        "billingHistory": [
+          {
+            "id": "inv_5lj2muh",
+            "invoiceNo": "INV-3120",
+            "date": "2026-03-08",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Online"
+          },
+          {
+            "id": "inv_s6vs9tn",
+            "invoiceNo": "INV-3121",
+            "date": "2026-04-07",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_qq4w1mh",
+            "invoiceNo": "INV-3122",
+            "date": "2026-05-07",
+            "amount": 12000,
+            "plan": "standard",
+            "status": "Paid",
+            "method": "Cash"
+          }
+        ]
+      },
+      {
+        "id": "sch_thescholar13",
+        "name": "The Scholars Inn",
+        "city": "Sargodha",
+        "address": "Sector Model Town, Sargodha",
+        "phone": "051-1037048",
+        "email": "info@thescholar.edu.pk",
+        "adminName": "Bilal Khan",
+        "adminEmail": "bilalkhan.admin@thescholar.edu.pk",
+        "adminPassword": "xrRRK253%",
+        "plan": "basic",
+        "status": "Active",
+        "websiteStatus": "Live",
+        "createdDate": "2026-06-07",
+        "subscriptionStart": "2026-06-07",
+        "subscriptionEnd": "2026-10-07",
+        "students": 145,
+        "teachers": 7,
+        "storageUsedGB": 9,
+        "lastBackup": "2026-09-14T16:54:35.081Z",
+        "lastBackupStatus": "Success",
+        "color": "#F59E0B",
+        "billingHistory": [
+          {
+            "id": "inv_syv9qje",
+            "invoiceNo": "INV-3130",
+            "date": "2026-06-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Cash"
+          },
+          {
+            "id": "inv_w4cnsgj",
+            "invoiceNo": "INV-3131",
+            "date": "2026-07-07",
+            "amount": 5000,
+            "plan": "basic",
+            "status": "Paid",
+            "method": "Bank Transfer"
+          }
+        ]
+      }
+    ]
+  }
+}
